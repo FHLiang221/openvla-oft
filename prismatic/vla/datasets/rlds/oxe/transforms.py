@@ -27,6 +27,20 @@ from prismatic.vla.datasets.rlds.utils.data_utils import (
     relabel_bridge_actions,
 )
 
+def simpler_env_switch_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any]:
+    """Transform for SimplerEnv Switch Controller dataset - combines EEF and gripper states."""
+    # Combine EEF_state (7D) and gripper_state (1D) into proprio (8D) as expected by OpenVLA
+    traj["observation"]["proprio"] = tf.concat([
+        traj["observation"]["EEF_state"],      # [7,] - EEF pose [x,y,z,qx,qy,qz,qw]
+        traj["observation"]["gripper_state"]   # [1,] - gripper openness
+    ], axis=-1)  # Results in [8,] proprio vector for StateEncoding.POS_QUAT
+    
+    return traj
+
+def simpler_env_success_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any]:
+    """Transform for SimplerEnv Success dataset - no changes needed, proprio already 8D."""
+    # Dataset already has proper 8D proprio vector [x,y,z,qx,qy,qz,qw,gripper]
+    return traj
 
 def bridge_oxe_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -841,11 +855,6 @@ def libero_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     return trajectory
 
 
-def aloha_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
-    # Don't need to do anything because dataset is already in the correct format
-    return trajectory
-
-
 # === Registry ===
 OXE_STANDARDIZATION_TRANSFORMS = {
     "bridge_oxe": bridge_oxe_dataset_transform,
@@ -924,10 +933,7 @@ OXE_STANDARDIZATION_TRANSFORMS = {
     "libero_object_no_noops": libero_dataset_transform,
     "libero_goal_no_noops": libero_dataset_transform,
     "libero_10_no_noops": libero_dataset_transform,
-    "libero_4_task_suites_no_noops": libero_dataset_transform,
-    ### ALOHA fine-tuning datasets
-    "aloha1_fold_shorts_20_demos": aloha_dataset_transform,
-    "aloha1_fold_shirt_30_demos": aloha_dataset_transform,
-    "aloha1_scoop_X_into_bowl_45_demos": aloha_dataset_transform,
-    "aloha1_put_X_into_pot_300_demos": aloha_dataset_transform,
+    "simpler_env_switch_dataset": simpler_env_switch_dataset_transform,
+    "bridge_simpler_env_switch_dataset": simpler_env_switch_dataset_transform,
+    "simpler_env_success_dataset": simpler_env_success_dataset_transform
 }

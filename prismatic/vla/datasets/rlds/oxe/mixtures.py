@@ -226,5 +226,16 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
     "aloha1_put_X_into_pot_300_demos": [
         ("aloha1_put_X_into_pot_300_demos", 1.0),
     ],
+
+    # === SimplerEnv Switch Dataset ===
+    "simpler_env_switch_dataset": [
+        ("simpler_env_switch_dataset", 1.0),
+    ],
+    "bridge_simpler_env_switch_dataset": [
+        ("bridge_simpler_env_switch_dataset", 1.0),
+    ],
+    "simpler_env_success_dataset": [
+        ("simpler_env_success_dataset", 1.0),
+    ],
 # fmt: on
 }

@@ -7,6 +7,7 @@ Evaluates a trained policy in a LIBERO simulation benchmark task suite.
 import json
 import logging
 import os
+import random
 import sys
 from collections import deque
 from dataclasses import dataclass
@@ -17,6 +18,7 @@ from typing import Optional, Union
 import draccus
 import numpy as np
 import tqdm
+import yaml
 from libero.libero import benchmark
 
 import wandb
@@ -126,6 +128,11 @@ class GenerateConfig:
     wandb_project: str = "your-wandb-project"        # Name of WandB project
 
     seed: int = 7                                    # Random Seed (for reproducibility)
+    
+    #################################################################################################################
+    # Holdout prompt evaluation parameters
+    #################################################################################################################
+    holdout_prompts_yaml: Optional[str] = None       # Path to YAML file with holdout prompts for evaluation
 
     # fmt: on
 
@@ -141,6 +148,52 @@ def validate_config(cfg: GenerateConfig) -> None:
 
     # Validate task suite
     assert cfg.task_suite_name in [suite.value for suite in TaskSuite], f"Invalid task suite: {cfg.task_suite_name}"
+
+
+def load_holdout_prompts(holdout_prompts_yaml: str) -> dict:
+    """Load holdout prompts from YAML file and structure for systematic evaluation."""
+    if not holdout_prompts_yaml or not os.path.exists(holdout_prompts_yaml):
+        return {}
+    
+    with open(holdout_prompts_yaml, 'r') as f:
+        holdout_prompts = yaml.safe_load(f)
+    
+    print(f"🎯 Loaded holdout prompts from: {holdout_prompts_yaml}")
+    for task, prompts in holdout_prompts.items():
+        print(f"  {task}: {len(prompts)} adversarial prompts")
+    
+    return holdout_prompts
+
+
+def get_holdout_task_description(original_task_description: str, holdout_prompts: dict) -> str:
+    """Get a random holdout prompt for the given task, or return original if no holdout available."""
+    # Normalize task description to match YAML keys
+    normalized_task = original_task_description.lower().strip()
+    
+    if normalized_task in holdout_prompts and holdout_prompts[normalized_task]:
+        # Randomly select one of the holdout prompts
+        selected_prompt = random.choice(holdout_prompts[normalized_task])
+        print(f"🔄 Using holdout prompt: '{selected_prompt}' (original: '{original_task_description}')")
+        return selected_prompt
+    
+    # Return original if no holdout prompt available
+    return original_task_description
+
+
+def get_all_prompt_variants(original_task_description: str, holdout_prompts: dict) -> list:
+    """Get all prompt variants for systematic evaluation: original + all adversarial prompts."""
+    # Normalize task description to match YAML keys
+    normalized_task = original_task_description.lower().strip()
+    
+    # Start with the original prompt
+    variants = [("original", original_task_description)]
+    
+    # Add all adversarial prompts if available
+    if normalized_task in holdout_prompts and holdout_prompts[normalized_task]:
+        for i, adv_prompt in enumerate(holdout_prompts[normalized_task]):
+            variants.append((f"adversarial_{i+1}", adv_prompt))
+    
+    return variants
 
 
 def initialize_model(cfg: GenerateConfig):
@@ -372,88 +425,162 @@ def run_task(
     total_episodes=0,
     total_successes=0,
     log_file=None,
+    holdout_prompts=None,
+    run_id=None,
 ):
-    """Run evaluation for a single task."""
+    """Run evaluation for a single task with all prompt variants."""
     # Get task
     task = task_suite.get_task(task_id)
 
     # Get initial states
     initial_states, all_initial_states = load_initial_states(cfg, task_suite, task_id, log_file)
 
-    # Initialize environment and get task description
-    env, task_description = get_libero_env(task, cfg.model_family, resolution=cfg.env_img_res)
+    # Initialize environment and get original task description
+    env, original_task_description = get_libero_env(task, cfg.model_family, resolution=cfg.env_img_res)
 
-    # Start episodes
-    task_episodes, task_successes = 0, 0
-    for episode_idx in tqdm.tqdm(range(cfg.num_trials_per_task)):
-        log_message(f"\nTask: {task_description}", log_file)
+    # Get all prompt variants for systematic evaluation
+    if holdout_prompts:
+        prompt_variants = get_all_prompt_variants(original_task_description, holdout_prompts)
+    else:
+        prompt_variants = [("original", original_task_description)]
 
-        # Handle initial state
-        if cfg.initial_states_path == "DEFAULT":
-            # Use default initial state
-            initial_state = initial_states[episode_idx]
-        else:
-            # Get keys for fetching initial episode state from JSON
-            initial_states_task_key = task_description.replace(" ", "_")
-            episode_key = f"demo_{episode_idx}"
+    log_message(f"\n{'='*80}", log_file)
+    log_message(f"TASK {task_id}: {original_task_description}", log_file)
+    log_message(f"Will evaluate {len(prompt_variants)} prompt variants, {cfg.num_trials_per_task} episodes each", log_file)
+    log_message(f"Initial states available: {len(initial_states) if cfg.initial_states_path == 'DEFAULT' else 'custom'}", log_file)
+    log_message(f"Prompt variants: {[v[0] for v in prompt_variants]}", log_file)
+    log_message(f"{'='*80}", log_file)
 
-            # Skip episode if expert demonstration failed to complete the task
-            if not all_initial_states[initial_states_task_key][episode_key]["success"]:
-                log_message(f"Skipping task {task_id} episode {episode_idx} due to failed expert demo!", log_file)
-                continue
+    # Track results per prompt variant
+    variant_results = {}
+    task_total_episodes = 0
+    task_total_successes = 0
 
-            # Get initial state
-            initial_state = np.array(all_initial_states[initial_states_task_key][episode_key]["initial_state"])
+    # Evaluate each prompt variant systematically
+    for variant_type, task_description in prompt_variants:
+        log_message(f"\n{'-'*60}", log_file)
+        log_message(f"EVALUATING: {variant_type.upper()}", log_file)
+        log_message(f"Prompt: {task_description}", log_file)
+        log_message(f"{'-'*60}", log_file)
 
-        log_message(f"Starting episode {task_episodes + 1}...", log_file)
+        variant_episodes = 0
+        variant_successes = 0
 
-        # Run episode
-        success, replay_images = run_episode(
-            cfg,
-            env,
-            task_description,
-            model,
-            resize_size,
-            processor,
-            action_head,
-            proprio_projector,
-            noisy_action_projector,
-            initial_state,
-            log_file,
-        )
+        # Reset episode_idx for each variant to ensure same initial states are used
+        episode_idx = 0
+        with tqdm.tqdm(total=cfg.num_trials_per_task, desc=f"{variant_type}") as pbar:
+            while variant_episodes < cfg.num_trials_per_task:
+                # Handle initial state with bounds checking
+                if cfg.initial_states_path == "DEFAULT":
+                    # Use default initial state with bounds checking
+                    if episode_idx >= len(initial_states):
+                        log_message(f"ERROR: episode_idx {episode_idx} >= len(initial_states) {len(initial_states)}", log_file)
+                        break
+                    initial_state = initial_states[episode_idx]
+                else:
+                    # Get keys for fetching initial episode state from JSON
+                    # IMPORTANT: Use original task description for lookup, not variant prompt
+                    initial_states_task_key = original_task_description.replace(" ", "_")
+                    episode_key = f"demo_{episode_idx}"
 
-        # Update counters
-        task_episodes += 1
-        total_episodes += 1
-        if success:
-            task_successes += 1
-            total_successes += 1
+                    # Check if episode key exists
+                    if (initial_states_task_key not in all_initial_states or 
+                        episode_key not in all_initial_states[initial_states_task_key]):
+                        log_message(f"Skipping task {task_id} episode {episode_idx} - episode key not found!", log_file)
+                        episode_idx += 1
+                        continue
 
-        # Save replay video
-        save_rollout_video(
-            replay_images, total_episodes, success=success, task_description=task_description, log_file=log_file
-        )
+                    # Skip episode if expert demonstration failed to complete the task
+                    if not all_initial_states[initial_states_task_key][episode_key]["success"]:
+                        log_message(f"Skipping task {task_id} episode {episode_idx} due to failed expert demo!", log_file)
+                        episode_idx += 1
+                        continue
 
-        # Log results
-        log_message(f"Success: {success}", log_file)
-        log_message(f"# episodes completed so far: {total_episodes}", log_file)
-        log_message(f"# successes: {total_successes} ({total_successes / total_episodes * 100:.1f}%)", log_file)
+                    # Get initial state
+                    initial_state = np.array(all_initial_states[initial_states_task_key][episode_key]["initial_state"])
+                
+                episode_idx += 1
 
-    # Log task results
-    task_success_rate = float(task_successes) / float(task_episodes) if task_episodes > 0 else 0
+                log_message(f"Starting {variant_type} episode {variant_episodes + 1}...", log_file)
+
+                # Run episode
+                success, replay_images = run_episode(
+                    cfg,
+                    env,
+                    task_description,
+                    model,
+                    resize_size,
+                    processor,
+                    action_head,
+                    proprio_projector,
+                    noisy_action_projector,
+                    initial_state,
+                    log_file,
+                )
+
+                # Update counters
+                variant_episodes += 1
+                task_total_episodes += 1
+                total_episodes += 1
+                
+                if success:
+                    variant_successes += 1
+                    task_total_successes += 1
+                    total_successes += 1
+
+                # Save replay video with task and variant info for better organization
+                # Use format: task_id_variant_episode for logical grouping
+                video_id = f"{task_id}_{variant_type}_{variant_episodes}"
+                save_rollout_video(
+                    replay_images, video_id, success=success, 
+                    task_description=f"[Task {task_id}] [{variant_type}] {task_description}", log_file=log_file, run_id=run_id
+                )
+
+                # Log episode results
+                log_message(f"Success: {success}", log_file)
+                
+                # Update progress bar
+                pbar.update(1)
+
+        # Calculate and store variant results
+        variant_success_rate = float(variant_successes) / float(variant_episodes) if variant_episodes > 0 else 0
+        variant_results[variant_type] = {
+            "episodes": variant_episodes,
+            "successes": variant_successes,
+            "success_rate": variant_success_rate,
+            "prompt": task_description
+        }
+
+        log_message(f"\n{variant_type.upper()} RESULTS:", log_file)
+        log_message(f"Episodes: {variant_episodes}", log_file)
+        log_message(f"Successes: {variant_successes}", log_file)
+        log_message(f"Success Rate: {variant_success_rate:.4f} ({variant_success_rate * 100:.1f}%)", log_file)
+
+    # Log overall task results
+    task_overall_success_rate = float(task_total_successes) / float(task_total_episodes) if task_total_episodes > 0 else 0
     total_success_rate = float(total_successes) / float(total_episodes) if total_episodes > 0 else 0
 
-    log_message(f"Current task success rate: {task_success_rate}", log_file)
-    log_message(f"Current total success rate: {total_success_rate}", log_file)
+    log_message(f"\n{'='*80}", log_file)
+    log_message(f"TASK {task_id} SUMMARY:", log_file)
+    for variant_type, results in variant_results.items():
+        log_message(f"  {variant_type}: {results['successes']}/{results['episodes']} ({results['success_rate']*100:.1f}%)", log_file)
+    log_message(f"  OVERALL: {task_total_successes}/{task_total_episodes} ({task_overall_success_rate*100:.1f}%)", log_file)
+    log_message(f"TOTAL SUCCESS RATE: {total_successes}/{total_episodes} ({total_success_rate*100:.1f}%)", log_file)
+    log_message(f"{'='*80}", log_file)
 
     # Log to wandb if enabled
     if cfg.use_wandb:
-        wandb.log(
-            {
-                f"success_rate/{task_description}": task_success_rate,
-                f"num_episodes/{task_description}": task_episodes,
-            }
-        )
+        wandb_data = {}
+        # Log individual variant results
+        for variant_type, results in variant_results.items():
+            wandb_data[f"success_rate/{original_task_description}_{variant_type}"] = results["success_rate"]
+            wandb_data[f"num_episodes/{original_task_description}_{variant_type}"] = results["episodes"]
+        
+        # Log overall task results
+        wandb_data[f"success_rate/{original_task_description}_overall"] = task_overall_success_rate
+        wandb_data[f"num_episodes/{original_task_description}_overall"] = task_total_episodes
+        
+        wandb.log(wandb_data)
 
     return total_episodes, total_successes
 
@@ -475,6 +602,15 @@ def eval_libero(cfg: GenerateConfig) -> float:
 
     # Setup logging
     log_file, local_log_filepath, run_id = setup_logging(cfg)
+
+    # Load holdout prompts if specified
+    holdout_prompts = None
+    if cfg.holdout_prompts_yaml:
+        holdout_prompts = load_holdout_prompts(cfg.holdout_prompts_yaml)
+        if holdout_prompts:
+            log_message(f"Loaded holdout prompts from: {cfg.holdout_prompts_yaml}", log_file)
+        else:
+            log_message(f"No holdout prompts found in: {cfg.holdout_prompts_yaml}", log_file)
 
     # Initialize LIBERO task suite
     benchmark_dict = benchmark.get_benchmark_dict()
@@ -499,6 +635,8 @@ def eval_libero(cfg: GenerateConfig) -> float:
             total_episodes,
             total_successes,
             log_file,
+            holdout_prompts,
+            run_id,
         )
 
     # Calculate final success rate
@@ -529,3 +667,88 @@ def eval_libero(cfg: GenerateConfig) -> float:
 
 if __name__ == "__main__":
     eval_libero()
+
+
+
+
+
+#Normal usage example:
+"""
+CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py \
+  --pretrained_checkpoint "/home/freddie/project/openvla-oft/checkpoints/openvla-7b-full" \
+  --task_suite_name libero_spatial \
+  --center_crop True \
+  --num_trials_per_task 50 \
+  --use_l1_regression False \
+  --use_diffusion False \
+  --use_film False \
+  --num_images_in_input 2 \
+  --use_proprio False \
+  --lora_rank 32 \
+  --use_wandb True \
+  --wandb_entity freddieliang-usc \
+  --wandb_project openvla_repl \
+  --run_id_note liberoSpatial_BASELINE_eval_adversarial_holdout \
+  --holdout_prompts_yaml ./ERT_eval_tasks.yaml
+"""
+# one liner:
+# CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py --pretrained_checkpoint "/home/freddie/project/openvla-oft/checkpoints/openvla-7b-full" --task_suite_name libero_spatial --center_crop True --num_trials_per_task 50 --use_l1_regression False --use_diffusion False --use_film False --num_images_in_input 2 --use_proprio False --lora_rank 32 --use_wandb True --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note liberoSpatial_BASELINE_eval_adversarial_holdout --holdout_prompts_yaml ./ERT_eval_tasks.yaml
+
+
+
+
+
+# Example with holdout prompts:
+"""
+CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py \
+      --pretrained_checkpoint "/home/freddie/project/openvla-oft/checkpoints/libero_spatial_oft_ERT64/openvla-7b+libero_spatial_no_no
+  ops+b64+lr-0.0005+lora-r32+dropout-0.0--image_aug--liberoSpatial_oft_ERT64--5000_chkpt" \
+      --task_suite_name libero_spatial \
+      --center_crop True \
+      --num_trials_per_task 50 \
+      --use_l1_regression True \
+      --use_diffusion False \
+      --use_film False \
+      --num_images_in_input 2 \
+      --use_proprio True \
+      --lora_rank 32 \
+      --use_wandb True \
+      --wandb_entity freddieliang-usc \
+      --wandb_project openvla_repl \
+      --run_id_note liberoSpatial_oft_eval_adversarial_holdout \
+      --holdout_prompts_yaml ./ERT_eval_tasks.yaml
+"""
+# one liner ERT64 eval:
+# CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py --pretrained_checkpoint ./checkpoints/libero_spatial_oft_ERT64/openvla-7b+libero_spatial_no_noops+b64+lr-0.0005+lora-r32+dropout-0.0--image_aug--liberoSpatial_oft_ERT64--5000_chkpt --task_suite_name libero_spatial --center_crop True --num_trials_per_task 50 --use_l1_regression True --use_diffusion False --use_film False --num_images_in_input 2 --use_proprio True --lora_rank 32 --use_wandb True --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note liberoSpatial_oft_eval_adversarial_holdout --holdout_prompts_yaml ./ERT_eval_tasks.yaml
+
+# one liner QD eval:
+# CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py --pretrained_checkpoint ./checkpoints/libero_spatial_oft_QD64_Repeat/openvla-7b+libero_spatial_no_noops+b64+lr-0.0005+lora-r32+dropout-0.0--image_aug--liberoSpatial_oft_QD64_Repeat--5000_chkpt --task_suite_name libero_spatial --center_crop True --num_trials_per_task 50 --use_l1_regression True --use_diffusion False --use_film False --num_images_in_input 2 --use_proprio True --lora_rank 32 --use_wandb True --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note liberoSpatial_oft_QD64_eval_QD_holdout --holdout_prompts_yaml ./QD_eval_tasks.yaml
+
+
+
+
+
+# Moojink's evaluation example:
+"""
+CUDA_VISIBLE_DEVICES=0 python experiments/robot/libero/run_libero_eval.py \
+    --pretrained_checkpoint moojink/openvla-7b-oft-finetuned-libero-spatial \
+    --task_suite_name libero_spatial \
+    --center_crop True \
+    --num_trials_per_task 50 \
+    --use_l1_regression True \
+    --use_diffusion False \
+    --use_film False \
+    --num_images_in_input 2 \
+    --use_proprio True \
+    --lora_rank 32 \
+    --use_wandb True \
+    --wandb_entity freddieliang-usc \
+    --wandb_project openvla_repl \
+    --run_id_note liberoSpatial_moojink_eval_adversarial_holdout \
+    --holdout_prompts_yaml ./ERT_eval_tasks.yaml
+"""
+#one liner ERT eval:
+# CUDA_VISIBLE_DEVICES=1 python experiments/robot/libero/run_libero_eval.py --pretrained_checkpoint moojink/openvla-7b-oft-finetuned-libero-spatial --task_suite_name libero_spatial --center_crop True --num_trials_per_task 50 --use_l1_regression True --use_diffusion False --use_film False --num_images_in_input 2 --use_proprio True --lora_rank 32 --use_wandb True --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note liberoSpatial_moojink_eval_adversarial_holdout --holdout_prompts_yaml ./ERT_eval_tasks.yaml
+
+#one liner QD eval:
+# CUDA_VISIBLE_DEVICES=1 python experiments/robot/libero/run_libero_eval.py --pretrained_checkpoint moojink/openvla-7b-oft-finetuned-libero-spatial --task_suite_name libero_spatial --center_crop True --num_trials_per_task 50 --use_l1_regression True --use_diffusion False --use_film False --num_images_in_input 2 --use_proprio True --lora_rank 32 --use_wandb True --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note liberoSpatial_moojink_eval_QD_holdout --holdout_prompts_yaml ./QD_eval_tasks.yaml

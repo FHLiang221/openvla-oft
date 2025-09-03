@@ -58,8 +58,10 @@ from prismatic.vla.constants import (
     NUM_ACTIONS_CHUNK,
     PROPRIO_DIM,
 )
-from prismatic.vla.datasets import RLDSBatchTransform, RLDSDataset
+from prismatic.vla.datasets.datasets2 import RLDSBatchTransform, RLDSDataset
 from prismatic.vla.datasets.rlds.utils.data_utils import save_dataset_statistics
+
+#from simpler_env_switch_dataset import simpler_env_switch_dataset
 
 # Sane Defaults
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -116,6 +118,12 @@ class FinetuneConfig:
     run_id_note: Optional[str] = None                # Extra note to add to end of run ID for logging
     run_id_override: Optional[str] = None            # Optional string to override the run ID with
     wandb_log_freq: int = 10                         # WandB logging frequency in steps
+
+    # Adversarial prompt settings (for datasets2.py)
+    adv_prompts_yaml: Optional[str] = "new_task_descriptions.yaml"  # Path to YAML file with adversarial prompts
+    adv_replace_prob: float = 0.0                    # Probability of using adversarial prompts (0.0=off, 1.0=always)
+    adv_log_examples_every: int = 0                  # Log adversarial replacements every N calls (0=no logging)
+    adv_log_file: Optional[str] = "logs/adversarial_prompts.log"  # File to log adversarial replacements to
 
     # fmt: on
 
@@ -974,6 +982,10 @@ def finetune(cfg: FinetuneConfig) -> None:
         prompt_builder_fn=PurePromptBuilder,
         use_wrist_image=use_wrist_image,
         use_proprio=cfg.use_proprio,
+        adv_prompts_yaml=cfg.adv_prompts_yaml,
+        adv_replace_prob=cfg.adv_replace_prob,
+        adv_log_examples_every=cfg.adv_log_examples_every,
+        adv_log_file=cfg.adv_log_file,
     )
     train_dataset = RLDSDataset(
         cfg.data_root_dir,
@@ -982,6 +994,10 @@ def finetune(cfg: FinetuneConfig) -> None:
         resize_resolution=tuple(vla.module.config.image_sizes),
         shuffle_buffer_size=cfg.shuffle_buffer_size,
         image_aug=cfg.image_aug,
+        adv_prompts_yaml=cfg.adv_prompts_yaml,
+        adv_replace_prob=cfg.adv_replace_prob,
+        adv_log_examples_every=cfg.adv_log_examples_every,
+        adv_log_file=cfg.adv_log_file,
     )
     if cfg.use_val_set:
         val_dataset = RLDSDataset(
@@ -1069,11 +1085,6 @@ def finetune(cfg: FinetuneConfig) -> None:
             # Compute smoothened train metrics
             smoothened_metrics = compute_smoothened_metrics(recent_metrics)
 
-            # Push Metrics to W&B (every wandb_log_freq gradient steps)
-            log_step = gradient_step_idx if not cfg.resume else cfg.resume_step + gradient_step_idx
-            if distributed_state.is_main_process and log_step % cfg.wandb_log_freq == 0:
-                log_metrics_to_wandb(smoothened_metrics, "VLA Train", log_step, wandb)
-
             # [If applicable] Linearly warm up learning rate from 10% to 100% of original
             if cfg.lr_warmup_steps > 0:
                 lr_progress = min((gradient_step_idx + 1) / cfg.lr_warmup_steps, 1.0)  # Cap at 1.0
@@ -1081,9 +1092,12 @@ def finetune(cfg: FinetuneConfig) -> None:
                 for param_group in optimizer.param_groups:
                     param_group["lr"] = current_lr
 
-            if distributed_state.is_main_process and gradient_step_idx % cfg.wandb_log_freq == 0:
-                # Log the learning rate
-                # Make sure to do this AFTER any learning rate modifications (e.g., warmup/decay)
+            # Push Metrics to W&B (every wandb_log_freq gradient steps)
+            log_step = gradient_step_idx if not cfg.resume else cfg.resume_step + gradient_step_idx
+            if distributed_state.is_main_process and log_step % cfg.wandb_log_freq == 0:
+                # Log training metrics
+                log_metrics_to_wandb(smoothened_metrics, "VLA Train", log_step, wandb)
+                # Log learning rate in the same call to avoid step conflicts
                 wandb.log(
                     {
                         "VLA Train/Learning Rate": scheduler.get_last_lr()[0],
@@ -1140,3 +1154,61 @@ def finetune(cfg: FinetuneConfig) -> None:
 
 if __name__ == "__main__":
     finetune()
+
+
+
+
+
+#FineTune SimplerEnv on Tengen
+"""
+torchrun --standalone --nnodes 1 --nproc_per_node 1 vla-scripts/finetune.py --vla_path openvla/openvla-7b --data_root_dir ~/tensorflow_datasets --dataset_name simpler_env_switch_dataset --run_root_dir ./checkpoints/simpler_oft --use_l1_regression true --use_diffusion false --use_film false --num_images_in_input 1 --use_proprio false --batch_size 1 --grad_accumulation_steps 64 --learning_rate 5e-4 --num_steps_before_decay 100000 --max_steps 10000 --save_freq 5000 --image_aug true --lora_rank 32 --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note simpler_OFT --merge_lora_during_training false
+"""
+# to merge later
+"""
+CUDA_VISIBLE_DEVICES=0 python vla-scripts/merge_lora_weights_and_save.py --base_checkpoint openvla/openvla-7b --lora_finetuned_checkpoint_dir ./checkpoints/simpler_oft/openvla-7b+simpler_env_switch_dataset+b64+lr-0.0005+lora-r32+dropout-0.0--image_aug--simpler_OFT--5000_chkpt/
+"""
+
+#FineTune Adv
+"""
+CUDA_VISIBLE_DEVICES=0 torchrun --standalone --nnodes 1 --nproc_per_node 1 vla-scripts/finetune.py --vla_path openvla/openvla-7b --data_root_dir ./modified_libero_rlds --dataset_name libero_spatial_no_noops --run_root_dir ./checkpoints/libero_spatial_oft_ERT64 --use_l1_regression True --use_diffusion False --use_film False --num_images_in_input 2 --use_proprio True --batch_size 1 --grad_accumulation_steps 64 --learning_rate 5e-4 --num_steps_before_decay 100000 --max_steps 150000 --save_freq 5000 --image_aug True --lora_rank 32 --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note liberoSpatial_oft_ERT64 --adv_prompts_yaml /home/freddie/project/openvla-oft/ERT_finetune_prompts.yaml --adv_replace_prob 0.5 --adv_log_examples_every 500
+"""
+
+#continue
+"""
+CUDA_VISIBLE_DEVICES=0 torchrun --standalone --nnodes 1 --nproc_per_node 1 vla-scripts/finetune.py \
+    --vla_path openvla/openvla-7b \
+    --data_root_dir ./modified_libero_rlds \
+    --dataset_name libero_spatial_no_noops \
+    --run_root_dir ./checkpoints/libero_spatial_oft_ERT64 \
+    --use_l1_regression True \
+    --use_diffusion False \
+    --use_film False \
+    --num_images_in_input 2 \
+    --use_proprio True \
+    --batch_size 1 \
+    --grad_accumulation_steps 64 \
+    --learning_rate 5e-4 \
+    --num_steps_before_decay 100000 \
+    --max_steps 150000 \
+    --save_freq 1000 \
+    --image_aug True \
+    --lora_rank 32 \
+    --wandb_entity freddieliang-usc \
+    --wandb_project openvla_repl \
+    --run_id_note liberoSpatial_oft_ERT64 \
+    --adv_prompts_yaml /home/freddie/project/openvla-oft/ERT_finetune_prompts.yaml \
+    --adv_replace_prob 0.5 \
+    --adv_log_examples_every 500 \
+    --resume True
+"""
+
+#Finetune QD, 2 GPUs, same effective batch size as above
+"""
+CUDA_VISIBLE_DEVICES=0,1 torchrun --standalone --nnodes 1 --nproc_per_node 2 vla-scripts/finetune.py --vla_path openvla/openvla-7b --data_root_dir ./modified_libero_rlds --dataset_name libero_spatial_no_noops --run_root_dir ./checkpoints/libero_spatial_oft_QD64_Repeat --use_l1_regression True --use_diffusion False --use_film False --num_images_in_input 2 --use_proprio True --batch_size 1 --grad_accumulation_steps 32 --learning_rate 5e-4 --num_steps_before_decay 100000 --max_steps 150000 --save_freq 5000 --image_aug True --lora_rank 32 --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note liberoSpatial_oft_QD64_Repeat --adv_prompts_yaml /home/freddie/project/openvla-oft/QD-VLM-preprocess-no-repeat.yaml --adv_replace_prob 0.5 --adv_log_examples_every 500
+"""
+
+# set merge_lora_during_training to False to avoid merging LoRA weights during training
+# and instead merge them after training is done, e.g., using the merge_lora_weights.py script
+
+# SimplerENV corrected:
+# CUDA_VISIBLE_DEVICES=0 torchrun --standalone --nnodes 1 --nproc_per_node 1 vla-scripts/finetune.py --vla_path openvla/openvla-7b --data_root_dir ~/tensorflow_datasets --dataset_name simpler_env_success_dataset --run_root_dir ./checkpoints/success_oft --use_l1_regression true --use_diffusion false --use_film false --num_images_in_input 1 --use_proprio true --batch_size 1 --grad_accumulation_steps 64 --learning_rate 5e-4 --num_steps_before_decay 100000 --max_steps 10000 --save_freq 5000 --image_aug true --lora_rank 32 --wandb_entity freddieliang-usc --wandb_project openvla_repl --run_id_note simplerSuccessOFT --merge_lora_during_training false

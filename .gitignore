@@ -148,6 +148,22 @@ dmypy.json
 cache/
 data/
 
+# Videos and evaluation results
+*.mp4
+*.avi
+*.mov
+*.mkv
+eval_videos/
+rollouts/
+
+# Images  
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+
 # Rollout videos and wandb logs
 rollouts/
 wandb/
