@@ -167,3 +167,15 @@ rollouts/
 # Rollout videos and wandb logs
 rollouts/
 wandb/
+
+# Model checkpoints and training artifacts
+checkpoints/
+experiments/logs/
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# But include robot experiment code
+!experiments/robot/
+modified_libero_rlds/

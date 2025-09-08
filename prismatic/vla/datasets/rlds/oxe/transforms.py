@@ -42,6 +42,11 @@ def simpler_env_success_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any
     # Dataset already has proper 8D proprio vector [x,y,z,qx,qy,qz,qw,gripper]
     return traj
 
+def jaco_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any]:
+    """Transform for Jaco dataset - no changes needed, proprio already 8D."""
+    # Dataset already has proper 8D proprio vector [x,y,z,qx,qy,qz,qw,gripper]
+    return traj
+
 def bridge_oxe_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     """
     Applies to version of Bridge V2 in Open X-Embodiment mixture.
@@ -935,5 +940,6 @@ OXE_STANDARDIZATION_TRANSFORMS = {
     "libero_10_no_noops": libero_dataset_transform,
     "simpler_env_switch_dataset": simpler_env_switch_dataset_transform,
     "bridge_simpler_env_switch_dataset": simpler_env_switch_dataset_transform,
-    "simpler_env_success_dataset": simpler_env_success_dataset_transform
+    "simpler_env_success_dataset": simpler_env_success_dataset_transform,
+    "jaco_dataset": jaco_dataset_transform,
 }
