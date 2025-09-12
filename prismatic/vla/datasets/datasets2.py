@@ -15,13 +15,19 @@ from PIL import Image
 from torch.utils.data import Dataset, IterableDataset
 from transformers import PreTrainedTokenizerBase
 
-from prismatic.models.backbones.llm.prompting import PromptBuilder
+from prismatic.models.backbones.llm.prompting import PromptBuilder 
 from prismatic.models.backbones.vision import ImageTransform
 from prismatic.util.data_utils import tree_map
 from prismatic.vla.action_tokenizer import ActionTokenizer
 from prismatic.vla.constants import ACTION_DIM, ACTION_PROPRIO_NORMALIZATION_TYPE, ACTION_TOKEN_BEGIN_IDX, IGNORE_INDEX, NUM_ACTIONS_CHUNK, PROPRIO_DIM, STOP_INDEX
 from prismatic.vla.datasets.rlds import make_interleaved_dataset, make_single_dataset
 from prismatic.vla.datasets.rlds.oxe import OXE_NAMED_MIXTURES, get_oxe_dataset_kwargs_and_weights
+
+import random
+import yaml
+import wandb
+import os
+from pathlib import Path
 
 @dataclass
 class RLDSBatchTransform:
@@ -32,16 +38,108 @@ class RLDSBatchTransform:
     predict_stop_token: bool = True
     use_wrist_image: bool = False
     use_proprio: bool = False
+    adv_prompts_yaml: str = "new_task_descriptions.yaml"
+    adv_replace_prob: float = 0.0
+    adv_log_examples_every: int = 0
+    adv_log_file: str = None
+    
+    def __init__(
+        self,
+        action_tokenizer: ActionTokenizer,
+        base_tokenizer: PreTrainedTokenizerBase,
+        image_transform: ImageTransform,
+        prompt_builder_fn: Type[PromptBuilder],
+        predict_stop_token: bool = True,
+        use_wrist_image: bool = False,
+        use_proprio: bool = False,
+        adv_prompts_yaml: str = "new_task_descriptions.yaml",
+        adv_replace_prob: float = 0.0,
+        adv_log_examples_every: int = 0,
+        adv_log_file: str = None,
+    ) -> None:
+        self.action_tokenizer = action_tokenizer
+        self.base_tokenizer = base_tokenizer
+        self.image_transform = image_transform
+        self.prompt_builder_fn = prompt_builder_fn
+        self.predict_stop_token = predict_stop_token
+        self.use_wrist_image = use_wrist_image
+        self.use_proprio = use_proprio
+        self.adv_prompts_yaml = adv_prompts_yaml
+        self.adv_replace_prob = max(0.0, min(1.0, float(adv_replace_prob)))
+        self.adv_log_examples_every = int(adv_log_examples_every or 0)
+        self.adv_log_file = adv_log_file
+        
+        # Load adversarial prompts from YAML only if replacement probability > 0
+        self.dataset = {}
+        if self.adv_replace_prob > 0.0:
+            print(f"🎯 Loading adversarial prompts from: {self.adv_prompts_yaml}")
+            with open(self.adv_prompts_yaml, "r") as f:
+                raw_dataset = yaml.safe_load(f)
+            
+            # Normalize keys to lowercase and filter out commented lines
+            total_alternatives = 0
+            for k, v in raw_dataset.items():
+                if isinstance(v, list):
+                    # Filter out commented alternatives (starting with #)
+                    clean_alternatives = [alt.strip() for alt in v if isinstance(alt, str) and not alt.strip().startswith('#')]
+                    if clean_alternatives:
+                        self.dataset[k.lower().strip()] = clean_alternatives
+                        total_alternatives += len(clean_alternatives)
+            
+            print(f"✅ Loaded {len(self.dataset)} tasks with {total_alternatives} adversarial alternatives")
+            print(f"🎯 Replacement probability: {self.adv_replace_prob} | Log every: {self.adv_log_examples_every}")
+        else:
+            print(f"🎯 Adversarial prompts disabled (replacement probability: {self.adv_replace_prob})")
+        
+        # Initialize logging counters
+        self._call_count = 0
+        self._replacement_count = 0
+        
+        # Setup log file if specified
+        if self.adv_log_file:
+            log_dir = Path(self.adv_log_file).parent
+            log_dir.mkdir(parents=True, exist_ok=True)
+
+    def _log_replacement(self, original: str, replacement: str) -> None:
+        """Log adversarial prompt replacement based on frequency setting."""
+        log_msg = f"[adv-prompt] Replaced: '{original}' -> '{replacement}'"
+        
+        # Log to console every adv_log_examples_every replacements
+        if self.adv_log_examples_every > 0 and (self._replacement_count % self.adv_log_examples_every) == 1:
+            print(log_msg)
+        
+        # Log to file if specified
+        if self.adv_log_file:
+            with open(self.adv_log_file, "a", encoding="utf-8") as f:
+                f.write(f"{log_msg}\n")
+        
+        # Skip wandb logging to avoid step conflicts with main training loop
+        # The adversarial metrics are logged to file instead
 
     def __call__(self, rlds_batch: Dict[str, Any]) -> Dict[str, Any]:
         """Converts a RLDS batch to the format expected by the OpenVLA collator/models."""
         dataset_name, current_action = rlds_batch["dataset_name"], rlds_batch["action"][0]
         img = Image.fromarray(rlds_batch["observation"]["image_primary"][0])
-        lang = rlds_batch["task"]["language_instruction"].decode().lower()
+        original_lang = rlds_batch["task"]["language_instruction"].decode().lower().strip()
         actions = rlds_batch["action"]
+        
+        # Increment call counter
+        self._call_count += 1
+        
+        # Decide whether to use adversarial replacement
+        use_adversarial = self.adv_replace_prob > 0.0 and random.random() < self.adv_replace_prob
+        
+        if use_adversarial and original_lang in self.dataset:
+            # Use adversarial alternative
+            lang = random.choice(self.dataset[original_lang])
+            self._replacement_count += 1
+            self._log_replacement(original_lang, lang)
+        else:
+            # Use original instruction
+            lang = original_lang
 
         # Construct Chat-based Prompt =>> Input is default query + language instruction, output are the action tokens
-        prompt_builder = self.prompt_builder_fn("openvla", language_instruction=lang)
+        prompt_builder = self.prompt_builder_fn("openvla")
 
         # Get future action chunk
         future_actions = rlds_batch["action"][1:]
@@ -52,17 +150,8 @@ class RLDSBatchTransform:
         action_chunk_string = current_action_string + future_actions_string
         action_chunk_len = len(action_chunk_string)
 
-        # Apply adversarial prompt replacement if available
-        processed_lang = lang
-        if hasattr(prompt_builder, '_adv_sampler') and prompt_builder._adv_sampler is not None:
-            replacement = prompt_builder._adv_sampler.maybe_sample(lang)
-            if replacement is not None:
-                processed_lang = replacement
-                if hasattr(prompt_builder, '_should_log') and prompt_builder._should_log():
-                    print(f"[adv-prompt] Replaced: '{lang}' -> '{replacement}'")
-
         conversation = [
-            {"from": "human", "value": f"What action should the robot take to {processed_lang}?"},
+            {"from": "human", "value": f"What action should the robot take to {lang}?"},
             {"from": "gpt", "value": action_chunk_string},
         ]
         for turn in conversation:
@@ -110,9 +199,33 @@ class RLDSDataset(IterableDataset):
         shuffle_buffer_size: int = 256_000,
         train: bool = True,
         image_aug: bool = False,
+        adv_prompts_yaml: str = "new_task_descriptions.yaml",
+        adv_replace_prob: float = 0.0,
+        adv_log_examples_every: int = 0,
+        adv_log_file: str = None,
     ) -> None:
         """Lightweight wrapper around RLDS TFDS Pipeline for use with PyTorch/OpenVLA Data Loaders."""
-        self.data_root_dir, self.data_mix, self.batch_transform = data_root_dir, data_mix, batch_transform
+        self.data_root_dir, self.data_mix = data_root_dir, data_mix
+        
+        # Update batch transform with adversarial parameters if not already set
+        if hasattr(batch_transform, 'adv_replace_prob') and batch_transform.adv_replace_prob > 0:
+            # Already configured with active adversarial mode
+            self.batch_transform = batch_transform
+        else:
+            # Create new batch transform with adversarial parameters
+            self.batch_transform = RLDSBatchTransform(
+                action_tokenizer=batch_transform.action_tokenizer,
+                base_tokenizer=batch_transform.base_tokenizer,
+                image_transform=batch_transform.image_transform,
+                prompt_builder_fn=batch_transform.prompt_builder_fn,
+                predict_stop_token=batch_transform.predict_stop_token,
+                use_wrist_image=batch_transform.use_wrist_image,
+                use_proprio=batch_transform.use_proprio,
+                adv_prompts_yaml=adv_prompts_yaml,
+                adv_replace_prob=adv_replace_prob,
+                adv_log_examples_every=adv_log_examples_every,
+                adv_log_file=adv_log_file,
+            )
 
         # Configure RLDS Dataset(s)
         if self.data_mix in OXE_NAMED_MIXTURES:

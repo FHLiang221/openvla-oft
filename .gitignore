@@ -151,3 +151,10 @@ data/
 # Rollout videos and wandb logs
 rollouts/
 wandb/
+
+# Modified RLDS datasets
+/modified_libero_rlds/
+
+/checkpoints
+
+/experiments/logs
