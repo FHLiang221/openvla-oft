@@ -8,10 +8,12 @@ Make sure to specify the correct base checkpoint when running this script. For e
 - if you fine-tuned the default OpenVLA-7B model with modifications to `modeling_prismatic.py` (OpenVLA class definition),
   then the base checkpoint path should point to the checkpoint containing the modifications
 
+# openvla/openvla-7b
+
 Usage:
     python vla-scripts/merge_lora_weights_and_save.py \
-        --base_checkpoint openvla/openvla-7b \
-        --lora_finetuned_checkpoint_dir /PATH/TO/CHECKPOINT/DIR/
+        --base_checkpoint /project/fhliang/openvla-oft/checkpoints/adv_500_10k \
+        --lora_finetuned_checkpoint_dir /project/fhliang/openvla-oft/checkpoints/adv_jaco_20_3k
 """
 
 import os
@@ -71,3 +73,5 @@ def main(cfg: ConvertConfig) -> None:
 
 if __name__ == "__main__":
     main()
+
+# hf upload fhliang/adv_jaco_20_3k /project/fhliang/openvla-oft/checkpoints/adv_jaco_20_3k

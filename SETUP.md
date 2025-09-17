@@ -22,3 +22,5 @@ pip install packaging ninja
 ninja --version; echo $?  # Verify Ninja --> should return exit code "0"
 pip install "flash-attn==2.5.5" --no-build-isolation
 ```
+
+Solved by downgrade opencv-python==4.10.0.84 and numpy==1.26.4.
