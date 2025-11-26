@@ -42,6 +42,7 @@ def simpler_env_success_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any
     # Dataset already has proper 8D proprio vector [x,y,z,qx,qy,qz,qw,gripper]
     return traj
 
+<<<<<<< HEAD
 def kinova_coke_pick_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any]:
     """Transform for Kinova Coke Pick dataset - no changes needed, data already in correct format."""
     # Dataset already has proper structure: image_primary, actions (7D), proprio (8D), instruction
@@ -58,6 +59,11 @@ def oct21_push_coke_sponge_dataset_transform(traj: Dict[str, Any]) -> Dict[str, 
         proprio[:, 3:4],   # qw (move from index 3 to after qz)
         proprio[:, 7:8],   # gripper
     ], axis=-1)
+=======
+def jaco_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any]:
+    """Transform for Jaco dataset - no changes needed, proprio already 8D."""
+    # Dataset already has proper 8D proprio vector [x,y,z,qx,qy,qz,qw,gripper]
+>>>>>>> 27698f5433e3b793ad38421a9ab0421f46850b2b
     return traj
 
 def bridge_oxe_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
@@ -961,4 +967,5 @@ OXE_STANDARDIZATION_TRANSFORMS = {
     "oct21_push_coke_sponge": oct21_push_coke_sponge_dataset_transform,
     "oct27_pick_up_blue_cup": oct21_push_coke_sponge_dataset_transform,
     "nov5_pick_up_blue_cup": oct21_push_coke_sponge_dataset_transform,
+    "jaco_dataset": jaco_dataset_transform,
 }

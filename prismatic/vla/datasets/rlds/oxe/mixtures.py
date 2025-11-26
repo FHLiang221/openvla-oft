@@ -237,5 +237,10 @@ OXE_NAMED_MIXTURES: Dict[str, List[Tuple[str, float]]] = {
     "simpler_env_success_dataset": [
         ("simpler_env_success_dataset", 1.0),
     ],
+
+    # === Jaco Dataset ===
+    "jaco_dataset": [
+        ("jaco_dataset", 1.0),
+    ],
 # fmt: on
 }
