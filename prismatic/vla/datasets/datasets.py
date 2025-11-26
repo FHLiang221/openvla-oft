@@ -41,10 +41,10 @@ class RLDSBatchTransform:
         actions = rlds_batch["action"]
 
         # Construct Chat-based Prompt =>> Input is default query + language instruction, output are the action tokens
-        prompt_builder = self.prompt_builder_fn("openvla", language_instruction=lang)
+        prompt_builder = self.prompt_builder_fn("openvla")
 
-        # Get future action chunk
-        future_actions = rlds_batch["action"][1:]
+        # Get future action chunk (only next 7 actions for NUM_ACTIONS_CHUNK=8)
+        future_actions = rlds_batch["action"][1:NUM_ACTIONS_CHUNK]
         future_actions_string = ''.join(self.action_tokenizer(future_actions))
 
         # Get action chunk string

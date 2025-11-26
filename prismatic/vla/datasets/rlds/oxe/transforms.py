@@ -42,6 +42,24 @@ def simpler_env_success_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any
     # Dataset already has proper 8D proprio vector [x,y,z,qx,qy,qz,qw,gripper]
     return traj
 
+def kinova_coke_pick_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any]:
+    """Transform for Kinova Coke Pick dataset - no changes needed, data already in correct format."""
+    # Dataset already has proper structure: image_primary, actions (7D), proprio (8D), instruction
+    return traj
+
+def oct21_push_coke_sponge_dataset_transform(traj: Dict[str, Any]) -> Dict[str, Any]:
+    """Transform for Oct21 Push Coke Sponge dataset - no changes needed, data already in correct format."""
+    # Dataset already has proper structure: image_primary, actions (7D), proprio (8D), instruction
+    proprio = traj["observation"]["proprio"]
+    # Reorder: [x,y,z,qw,qx,qy,qz,gripper] -> [x,y,z,qx,qy,qz,qw,gripper]
+    traj["observation"]["proprio"] = tf.concat([
+        proprio[:, :3],    # x, y, z
+        proprio[:, 4:7],   # qx, qy, qz (skip qw at index 3)
+        proprio[:, 3:4],   # qw (move from index 3 to after qz)
+        proprio[:, 7:8],   # gripper
+    ], axis=-1)
+    return traj
+
 def bridge_oxe_dataset_transform(trajectory: Dict[str, Any]) -> Dict[str, Any]:
     """
     Applies to version of Bridge V2 in Open X-Embodiment mixture.
@@ -935,5 +953,12 @@ OXE_STANDARDIZATION_TRANSFORMS = {
     "libero_10_no_noops": libero_dataset_transform,
     "simpler_env_switch_dataset": simpler_env_switch_dataset_transform,
     "bridge_simpler_env_switch_dataset": simpler_env_switch_dataset_transform,
-    "simpler_env_success_dataset": simpler_env_success_dataset_transform
+    "simpler_env_success_dataset": simpler_env_success_dataset_transform,
+    "kinova_coke_pick_same_start": kinova_coke_pick_dataset_transform,
+    "kinova_coke_pick_different_start": kinova_coke_pick_dataset_transform,
+    "kinova_coke_push_one_camera": kinova_coke_pick_dataset_transform,
+    "kinova_coke_push": kinova_coke_pick_dataset_transform,
+    "oct21_push_coke_sponge": oct21_push_coke_sponge_dataset_transform,
+    "oct27_pick_up_blue_cup": oct21_push_coke_sponge_dataset_transform,
+    "nov5_pick_up_blue_cup": oct21_push_coke_sponge_dataset_transform,
 }

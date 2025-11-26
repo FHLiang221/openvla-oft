@@ -703,8 +703,8 @@ def finetune(cfg: FinetuneConfig) -> None:
         action_tokenizer,
         processor.tokenizer,
         image_transform=processor.image_processor.apply_transform,
-        prompt_builder_fn=lambda *a, **k: AdvPromptBuilder(
-            *a, adv_sampler=adv_sampler, adv_log_every=cfg.adv_log_examples_every, **k
+        prompt_builder_fn=lambda model_family, system_prompt=None: AdvPromptBuilder(
+            model_family, system_prompt, adv_sampler=adv_sampler, adv_log_every=cfg.adv_log_examples_every
         ),
         use_wrist_image=use_wrist_image,
         use_proprio=cfg.use_proprio,
