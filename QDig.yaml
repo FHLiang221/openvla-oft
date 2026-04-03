@@ -1,0 +1,64 @@
+pick apple:
+- pick the apple gently
+- obtain the red, round fruit commonly known as an apple from its current resting position
+- yo, grab that apple!
+- i'm not quite sure who you're talking to, but hey, can you snag that apple for me?
+- pick apple by extending arm, adjusting wrist orientation, and closing gripper around the apple precisely
+- listen for the crunch and then pick the apple
+- i don't know who the robot is addressing here, sorry first, identify the location of the apple then, move towards it lastly, grasp the apple gently
+- i'm not entirely certain who the robot is supposed to be communicating with in this particular context, my apologies, but could you kindly proceed to grasp and hold the apple?
+# i'm not quite sure who you're yakking to, but hey, can you grab that apple for me?
+# i'm not sure who you're chatting with, but hey, can you grab that apple for me?
+- pick apple
+
+pick coke can:
+- carefully pick coke can
+- first locate the coke can, then extend the arm towards the can, open the gripper, lower the arm, close the gripper around the can, and finally lift the can
+- grasp and lift the cylindrical beverage container that is most commonly identified as a coca cola can
+- approach the table, align the gripper, and carefully pick up the coke can with a gentle grip
+- grab that soda can, buddy
+- grasp and elevate the cylindrical beverage container that is frequently and commonly identified as a coca cola can of soda drink
+- pick the coke can you hear fizzing
+- carefully grab that soda can, buddy
+# gently nab that soda can
+# approach the coke can, adjust your grip, gently grasp it, and then lift it carefully
+- pick coke can
+
+pick sponge:
+- sure thing, just gently grab that sponge
+- sure thing, just approach the sponge from above and gently clasp it with your gripper before picking it up
+- carefully pick up the sponge that gently produces a slightly squishy sound upon being pressed
+- grab that sponge, buddy!
+- move towards the sponge, lower the gripper, and then grasp the sponge
+- pick the sponge that has a slightly squishy sound when pressed
+- grab that sponge, will ya?
+- carefully pick sponge
+# carefully grasp the sponge with the robotic hand, ensuring a gentle touch to maintain its shape, and then lift it smoothly off the table
+# grasp and elevate the sponge object from its current resting place on the table surface
+- pick sponge
+
+close bottom drawer:
+- gently grasp the handle and slowly slide the bottom drawer until it is completely closed using a smooth, consistent motion
+- would you mind closing the bottom drawer for me?
+- gently close the bottom drawer
+- meticulously ensure the complete and thorough closure of the lowest drawer located on the piece of furniture
+- shut the bottom drawer, would ya?
+- approach the bottom drawer, grasp the handle, pull the drawer slightly forward if necessary, reposition your grip, and then push the drawer fully closed
+- approach the bottom drawer while listening for a soft click
+- meticulously ascertain the comprehensive cessation of the nadir drawer on the furnishing
+# close the drawer at the bottom, listening for the sound of it clicking shut
+# could you please close the bottom drawer for me?
+- close bottom drawer
+
+open top drawer:
+- i would appreciate it if you could open the top drawer for me
+- gently pull the handle and slowly open the top drawer
+- carefully grasp the handle, ensuring a soft grip, and progressively open the top drawer with caution
+- please proceed to open the drawer that is located at the uppermost position, which is commonly referred to as the top drawer
+- open the top drawer until you hear the satisfying click or notice the smooth slide, indicating it is fully open
+- grab the handle of the top drawer carefully, pull it gently towards you until resistance is felt, listen closely for any clicking sound, or pay close attention to the sliding motion, and when you either hear the click or notice the smooth glide, understand that the drawer is fully open
+- initiate the extension of your manipulatory extremity towards the frontal region of the containment apparatus, and with meticulous finesse, conduct the necessary procedure to actualize the unsealing of the primary depository component
+- hey buddy, just stretch out your arm towards the front of that storage deal, and with a chill move, go ahead and pop open the top drawer
+# could you open the top drawer, please?
+# open the top drawer gently
+- open top drawer

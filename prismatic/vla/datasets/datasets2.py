@@ -1,0 +1,449 @@
+"""
+datasets.py
+
+Lightweight PyTorch Dataset Definition for wrapping RLDS TFDS Pipeline; just defines transform from RLDS default
+format to OpenVLA, IterableDataset shim.
+"""
+
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, Tuple, Type
+
+import numpy as np
+import torch
+from PIL import Image
+from torch.utils.data import Dataset, IterableDataset
+from transformers import PreTrainedTokenizerBase
+
+from prismatic.models.backbones.llm.prompting import PromptBuilder 
+from prismatic.models.backbones.vision import ImageTransform
+from prismatic.util.data_utils import tree_map
+from prismatic.vla.action_tokenizer import ActionTokenizer
+from prismatic.vla.constants import ACTION_DIM, ACTION_PROPRIO_NORMALIZATION_TYPE, ACTION_TOKEN_BEGIN_IDX, IGNORE_INDEX, NUM_ACTIONS_CHUNK, PROPRIO_DIM, STOP_INDEX
+from prismatic.vla.datasets.rlds import make_interleaved_dataset, make_single_dataset
+from prismatic.vla.datasets.rlds.oxe import OXE_NAMED_MIXTURES, get_oxe_dataset_kwargs_and_weights
+
+import json
+import random
+import yaml
+import wandb
+import os
+from pathlib import Path
+
+@dataclass
+class RLDSBatchTransform:
+    action_tokenizer: ActionTokenizer
+    base_tokenizer: PreTrainedTokenizerBase
+    image_transform: ImageTransform
+    prompt_builder_fn: Type[PromptBuilder]
+    predict_stop_token: bool = True
+    use_wrist_image: bool = False
+    use_proprio: bool = False
+    adv_prompts_yaml: str = "new_task_descriptions.yaml"
+    adv_replace_prob: float = 0.0
+    adv_log_examples_every: int = 0
+    adv_log_file: str = None
+    aug_json_path: str = None
+    aug_types: str = None
+    aug_split: str = "train"
+
+    def __init__(
+        self,
+        action_tokenizer: ActionTokenizer,
+        base_tokenizer: PreTrainedTokenizerBase,
+        image_transform: ImageTransform,
+        prompt_builder_fn: Type[PromptBuilder],
+        predict_stop_token: bool = True,
+        use_wrist_image: bool = False,
+        use_proprio: bool = False,
+        adv_prompts_yaml: str = "new_task_descriptions.yaml",
+        adv_replace_prob: float = 0.0,
+        adv_log_examples_every: int = 0,
+        adv_log_file: str = None,
+        aug_json_path: str = None,
+        aug_types: str = None,
+        aug_split: str = "train",
+    ) -> None:
+        self.action_tokenizer = action_tokenizer
+        self.base_tokenizer = base_tokenizer
+        self.image_transform = image_transform
+        self.prompt_builder_fn = prompt_builder_fn
+        self.predict_stop_token = predict_stop_token
+        self.use_wrist_image = use_wrist_image
+        self.use_proprio = use_proprio
+        self.adv_prompts_yaml = adv_prompts_yaml
+        self.adv_replace_prob = max(0.0, min(1.0, float(adv_replace_prob)))
+        self.adv_log_examples_every = int(adv_log_examples_every or 0)
+        self.adv_log_file = adv_log_file
+        self.aug_json_path = aug_json_path
+        self.aug_types = aug_types
+        self.aug_split = aug_split
+
+        # Load augmented prompts: JSON takes priority over YAML
+        self.dataset = {}
+        if self.aug_json_path and self.adv_replace_prob > 0.0:
+            self._load_augmented_prompts_json()
+        elif self.adv_replace_prob > 0.0:
+            self._load_adversarial_prompts_yaml()
+        else:
+            print(f"Adversarial/augmented prompts disabled (replacement probability: {self.adv_replace_prob})")
+
+        # Initialize logging counters
+        self._call_count = 0
+        self._replacement_count = 0
+
+        # Setup log file if specified
+        if self.adv_log_file:
+            log_dir = Path(self.adv_log_file).parent
+            log_dir.mkdir(parents=True, exist_ok=True)
+
+    def _load_augmented_prompts_json(self) -> None:
+        """Load augmented prompts from JSON file, filtered by augmentation types and split."""
+        print(f"Loading augmented prompts from JSON: {self.aug_json_path}")
+        with open(self.aug_json_path, "r") as f:
+            raw_data = json.load(f)
+
+        tasks = raw_data.get("tasks", {})
+
+        # Parse requested augmentation types
+        if self.aug_types:
+            requested_types = [t.strip() for t in self.aug_types.split(",")]
+        else:
+            # Use all available augmentation types
+            requested_types = None
+
+        total_alternatives = 0
+        for task_key, task_data in tasks.items():
+            augmentations = task_data.get("augmentations", {})
+            original_prompt = task_data.get("original_prompt", "").lower().strip()
+            if not original_prompt:
+                continue
+
+            # Collect prompts from requested augmentation types
+            alternatives = []
+            for aug_type, splits in augmentations.items():
+                if requested_types is not None and aug_type not in requested_types:
+                    continue
+                split_prompts = splits.get(self.aug_split, [])
+                alternatives.extend([p.lower().strip() for p in split_prompts])
+
+            if alternatives:
+                self.dataset[original_prompt] = alternatives
+                total_alternatives += len(alternatives)
+
+        # Log which augmentation types are active
+        available_types = set()
+        for task_data in tasks.values():
+            available_types.update(task_data.get("augmentations", {}).keys())
+        active_types = requested_types if requested_types else sorted(available_types)
+
+        print(f"Loaded {len(self.dataset)} tasks with {total_alternatives} augmented prompts")
+        print(f"  Augmentation types: {active_types}")
+        print(f"  Split: {self.aug_split}")
+        print(f"  Replacement probability: {self.adv_replace_prob}")
+
+    def _load_adversarial_prompts_yaml(self) -> None:
+        """Load adversarial prompts from YAML file (legacy format)."""
+        print(f"Loading adversarial prompts from YAML: {self.adv_prompts_yaml}")
+        with open(self.adv_prompts_yaml, "r") as f:
+            raw_dataset = yaml.safe_load(f)
+
+        # Normalize keys to lowercase and filter out commented lines
+        total_alternatives = 0
+        for k, v in raw_dataset.items():
+            if isinstance(v, list):
+                clean_alternatives = [alt.strip() for alt in v if isinstance(alt, str) and not alt.strip().startswith('#')]
+                if clean_alternatives:
+                    self.dataset[k.lower().strip()] = clean_alternatives
+                    total_alternatives += len(clean_alternatives)
+
+        print(f"Loaded {len(self.dataset)} tasks with {total_alternatives} adversarial alternatives")
+        print(f"  Replacement probability: {self.adv_replace_prob} | Log every: {self.adv_log_examples_every}")
+
+    def _log_replacement(self, original: str, replacement: str) -> None:
+        """Log adversarial prompt replacement based on frequency setting."""
+        log_msg = f"[adv-prompt] Replaced: '{original}' -> '{replacement}'"
+        
+        # Log to console every adv_log_examples_every replacements
+        if self.adv_log_examples_every > 0 and (self._replacement_count % self.adv_log_examples_every) == 1:
+            print(log_msg)
+        
+        # Log to file if specified
+        if self.adv_log_file:
+            with open(self.adv_log_file, "a", encoding="utf-8") as f:
+                f.write(f"{log_msg}\n")
+        
+        # Skip wandb logging to avoid step conflicts with main training loop
+        # The adversarial metrics are logged to file instead
+
+    def __call__(self, rlds_batch: Dict[str, Any]) -> Dict[str, Any]:
+        """Converts a RLDS batch to the format expected by the OpenVLA collator/models."""
+        dataset_name, current_action = rlds_batch["dataset_name"], rlds_batch["action"][0]
+        img = Image.fromarray(rlds_batch["observation"]["image_primary"][0])
+        original_lang = rlds_batch["task"]["language_instruction"].decode().lower().strip()
+        actions = rlds_batch["action"]
+        
+        # Increment call counter
+        self._call_count += 1
+        
+        # Decide whether to use adversarial replacement
+        use_adversarial = self.adv_replace_prob > 0.0 and random.random() < self.adv_replace_prob
+        
+        if use_adversarial and original_lang in self.dataset:
+            # Use adversarial alternative
+            lang = random.choice(self.dataset[original_lang])
+            self._replacement_count += 1
+            self._log_replacement(original_lang, lang)
+        else:
+            # Use original instruction
+            lang = original_lang
+
+        # Construct Chat-based Prompt =>> Input is default query + language instruction, output are the action tokens
+        prompt_builder = self.prompt_builder_fn("openvla")
+
+        # Get future action chunk
+        future_actions = rlds_batch["action"][1:]
+        future_actions_string = ''.join(self.action_tokenizer(future_actions))
+
+        # Get action chunk string
+        current_action_string = self.action_tokenizer(current_action)
+        action_chunk_string = current_action_string + future_actions_string
+        action_chunk_len = len(action_chunk_string)
+
+        conversation = [
+            {"from": "human", "value": f"What action should the robot take to {lang}?"},
+            {"from": "gpt", "value": action_chunk_string},
+        ]
+        for turn in conversation:
+            prompt_builder.add_turn(turn["from"], turn["value"])
+
+        # Tokenize (w/ `base_tokenizer`)
+        input_ids = self.base_tokenizer(prompt_builder.get_prompt(), add_special_tokens=True).input_ids
+        labels = list(input_ids)
+
+        # Tensorize =>> Run Image Transform to get `pixel_values` =>> Return
+        #   =>> IMPORTANT :: IF WE'RE USING HF LLM.forward(..., labels=labels), SHIFTING HAPPENS _INSIDE_ MODEL!
+        input_ids, labels = torch.tensor(input_ids), torch.tensor(labels)
+        pixel_values = self.image_transform(img)
+
+        # [CRITICAL] We do not want to take the loss for anything but the predicted action tokens!
+        labels[: -(action_chunk_len + 1)] = IGNORE_INDEX
+        if not self.predict_stop_token:
+            labels[-1] = IGNORE_INDEX
+
+        return_dict = dict(pixel_values=pixel_values, input_ids=input_ids, labels=labels, dataset_name=dataset_name, actions=actions)
+
+        # Add additional inputs
+        if self.use_wrist_image:
+            all_wrist_pixels = []
+            for k in rlds_batch["observation"].keys():
+                if "wrist" in k:
+                    img_wrist = Image.fromarray(rlds_batch["observation"][k][0])
+                    pixel_values_wrist = self.image_transform(img_wrist)
+                    all_wrist_pixels.append(pixel_values_wrist)
+            return_dict["pixel_values_wrist"] = torch.cat(all_wrist_pixels, dim=0)
+        if self.use_proprio and "proprio" in rlds_batch["observation"]:
+            proprio = rlds_batch["observation"]["proprio"]
+            return_dict["proprio"] = proprio
+
+        return return_dict
+
+
+class RLDSDataset(IterableDataset):
+    def __init__(
+        self,
+        data_root_dir: Path,
+        data_mix: str,
+        batch_transform: RLDSBatchTransform,
+        resize_resolution: Tuple[int, int],
+        shuffle_buffer_size: int = 256_000,
+        train: bool = True,
+        image_aug: bool = False,
+        adv_prompts_yaml: str = "new_task_descriptions.yaml",
+        adv_replace_prob: float = 0.0,
+        adv_log_examples_every: int = 0,
+        adv_log_file: str = None,
+        aug_json_path: str = None,
+        aug_types: str = None,
+        aug_split: str = "train",
+    ) -> None:
+        """Lightweight wrapper around RLDS TFDS Pipeline for use with PyTorch/OpenVLA Data Loaders."""
+        self.data_root_dir, self.data_mix = data_root_dir, data_mix
+
+        # Update batch transform with adversarial parameters if not already set
+        if hasattr(batch_transform, 'adv_replace_prob') and batch_transform.adv_replace_prob > 0:
+            # Already configured with active adversarial mode
+            self.batch_transform = batch_transform
+        else:
+            # Create new batch transform with adversarial parameters
+            self.batch_transform = RLDSBatchTransform(
+                action_tokenizer=batch_transform.action_tokenizer,
+                base_tokenizer=batch_transform.base_tokenizer,
+                image_transform=batch_transform.image_transform,
+                prompt_builder_fn=batch_transform.prompt_builder_fn,
+                predict_stop_token=batch_transform.predict_stop_token,
+                use_wrist_image=batch_transform.use_wrist_image,
+                use_proprio=batch_transform.use_proprio,
+                adv_prompts_yaml=adv_prompts_yaml,
+                adv_replace_prob=adv_replace_prob,
+                adv_log_examples_every=adv_log_examples_every,
+                adv_log_file=adv_log_file,
+                aug_json_path=aug_json_path,
+                aug_types=aug_types,
+                aug_split=aug_split,
+            )
+
+        # Configure RLDS Dataset(s)
+        if self.data_mix in OXE_NAMED_MIXTURES:
+            mixture_spec = OXE_NAMED_MIXTURES[self.data_mix]
+        else:
+            # Assume that passed "mixture" name is actually a single dataset -- create single-dataset "mix"
+            mixture_spec = [(self.data_mix, 1.0)]
+
+        # fmt: off
+        if "aloha" in self.data_mix:
+            load_camera_views = ("primary", "left_wrist", "right_wrist")
+        else:
+            load_camera_views = ("primary", "wrist")
+
+        per_dataset_kwargs, weights = get_oxe_dataset_kwargs_and_weights(
+            self.data_root_dir,
+            mixture_spec,
+            load_camera_views=load_camera_views,
+            load_depth=False,
+            load_proprio=True,
+            load_language=True,
+            action_proprio_normalization_type=ACTION_PROPRIO_NORMALIZATION_TYPE,
+        )
+        rlds_config = dict(
+            traj_transform_kwargs=dict(
+                window_size=1,                                      # If we wanted to feed / predict more than one step
+                future_action_window_size=NUM_ACTIONS_CHUNK-1,      # For action chunking
+                skip_unlabeled=True,                                # Skip trajectories without language labels
+                goal_relabeling_strategy="uniform",                 # Goals are currently unused
+            ),
+            frame_transform_kwargs=dict(
+                resize_size=resize_resolution,
+                num_parallel_calls=16,                          # For CPU-intensive ops (decoding, resizing, etc.)
+            ),
+            dataset_kwargs_list=per_dataset_kwargs,
+            shuffle_buffer_size=shuffle_buffer_size,
+            sample_weights=weights,
+            balance_weights=True,
+            traj_transform_threads=len(mixture_spec),
+            traj_read_threads=len(mixture_spec),
+            train=train,
+        )
+
+        # If applicable, enable image augmentations
+        if image_aug:
+            rlds_config["frame_transform_kwargs"].update({"image_augment_kwargs" : dict(
+                random_resized_crop=dict(scale=[0.9, 0.9], ratio=[1.0, 1.0]),
+                random_brightness=[0.2],
+                random_contrast=[0.8, 1.2],
+                random_saturation=[0.8, 1.2],
+                random_hue=[0.05],
+                augment_order=[
+                    "random_resized_crop",
+                    "random_brightness",
+                    "random_contrast",
+                    "random_saturation",
+                    "random_hue",
+                ],
+            )}),
+        # fmt: on
+
+        # Initialize RLDS Dataset
+        self.dataset, self.dataset_length, self.dataset_statistics = self.make_dataset(rlds_config)
+
+    def make_dataset(self, rlds_config):
+        return make_interleaved_dataset(**rlds_config)
+
+    def __iter__(self) -> Dict[str, Any]:
+        for rlds_batch in self.dataset.as_numpy_iterator():
+            yield self.batch_transform(rlds_batch)
+
+    def __len__(self) -> int:
+        return self.dataset_length
+
+    # === Explicitly Unused ===
+    def __getitem__(self, idx: int) -> None:
+        raise NotImplementedError("IterableDataset does not implement map-style __getitem__; see __iter__ instead!")
+
+
+class EpisodicRLDSDataset(RLDSDataset):
+    """Returns full episodes as list of steps instead of individual transitions (useful for visualizations)."""
+
+    def make_dataset(self, rlds_config):
+        per_dataset_kwargs = rlds_config["dataset_kwargs_list"]
+        assert len(per_dataset_kwargs) == 1, "Only support single-dataset `mixes` for episodic datasets."
+
+        return make_single_dataset(
+            per_dataset_kwargs[0],
+            train=rlds_config["train"],
+            traj_transform_kwargs=rlds_config["traj_transform_kwargs"],
+            frame_transform_kwargs=rlds_config["frame_transform_kwargs"],
+        )
+
+    def __iter__(self) -> Dict[str, Any]:
+        for rlds_batch in self.dataset.as_numpy_iterator():
+            out = [
+                self.batch_transform(tree_map(lambda x: x[i], rlds_batch))  # noqa: B023
+                for i in range(rlds_batch["action"].shape[0])
+            ]
+            yield out
+
+
+class DummyDataset(Dataset):
+    def __init__(
+        self,
+        action_tokenizer: ActionTokenizer,
+        base_tokenizer: PreTrainedTokenizerBase,
+        image_transform: ImageTransform,
+        prompt_builder_fn: Type[PromptBuilder],
+    ) -> None:
+        self.action_tokenizer = action_tokenizer
+        self.base_tokenizer = base_tokenizer
+        self.image_transform = image_transform
+        self.prompt_builder_fn = prompt_builder_fn
+
+        # Note =>> We expect the dataset to store statistics for action de-normalization. Specifically, we store the
+        # per-dimension 1st and 99th action quantile. The values below correspond to "no normalization" for simplicity.
+        self.dataset_statistics = {
+            "dummy_dataset": {
+                "action": {"q01": np.zeros((7,), dtype=np.float32), "q99": np.ones((7,), dtype=np.float32)}
+            }
+        }
+
+    def __len__(self):
+        # TODO =>> Replace with number of elements in your dataset!
+        return 10000
+
+    def __getitem__(self, idx):
+        # TODO =>> Load image, action and instruction from disk -- we use dummy values
+        image = Image.fromarray(np.asarray(np.random.rand(224, 224, 3) * 255.0, dtype=np.uint8))
+        action = np.asarray(np.random.rand(7), dtype=np.float32)
+        instruction = "do something spectacular"
+
+        # Add instruction to VLA prompt
+        prompt_builder = self.prompt_builder_fn("openvla")
+        conversation = [
+            {"from": "human", "value": f"What action should the robot take to {instruction}?"},
+            {"from": "gpt", "value": self.action_tokenizer(action)},
+        ]
+        for turn in conversation:
+            prompt_builder.add_turn(turn["from"], turn["value"])
+
+        # Tokenize (w/ `base_tokenizer`)
+        input_ids = self.base_tokenizer(prompt_builder.get_prompt(), add_special_tokens=True).input_ids
+        labels = list(input_ids)
+
+        # Tensorize =>> Run Image Transform to get `pixel_values` =>> Return
+        #   =>> IMPORTANT :: IF WE'RE USING HF .forward(..., labels=labels), SHIFTING HAPPENS _INSIDE_ MODEL!
+        input_ids, labels = torch.tensor(input_ids), torch.tensor(labels)
+        pixel_values = self.image_transform(image)
+
+        # [CRITICAL] We do not want to take the loss for anything but the predicted action tokens!
+        labels[: -(len(action) + 1)] = IGNORE_INDEX
+
+        return dict(pixel_values=pixel_values, input_ids=input_ids, labels=labels)
