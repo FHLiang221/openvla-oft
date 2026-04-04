@@ -1,0 +1,280 @@
+Task suite: libero_goal
+Using default initial states
+
+================================================================================
+TASK 0: open the middle drawer of the cabinet
+Will evaluate 1 prompt variants, 50 episodes each
+Initial states available: 50
+Prompt variants: ['original']
+================================================================================
+
+------------------------------------------------------------
+EVALUATING: ORIGINAL
+Prompt: open the middle drawer of the cabinet
+------------------------------------------------------------
+Starting original episode 1...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_1--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 2...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_2--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 3...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_3--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 4...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_4--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 5...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_5--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 6...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_6--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 7...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_7--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 8...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_8--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 9...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_9--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 10...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_10--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 11...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_11--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 12...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_12--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 13...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_13--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 14...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_14--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 15...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_15--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 16...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_16--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 17...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_17--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 18...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_18--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 19...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_19--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 20...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_20--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 21...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_21--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 22...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_22--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 23...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_23--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 24...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_24--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 25...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_25--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 26...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_26--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 27...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_27--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 28...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_28--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 29...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_29--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 30...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_30--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 31...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_31--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 32...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_32--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 33...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_33--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 34...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_34--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 35...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_35--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 36...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_36--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 37...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_37--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 38...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_38--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 39...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_39--success=False--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: False
+Starting original episode 40...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_40--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 41...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_41--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 42...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_42--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 43...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_43--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 44...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_44--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 45...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_45--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 46...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_46--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 47...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_47--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 48...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_48--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 49...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_49--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+Starting original episode 50...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=0_original_50--success=True--task=[task_0]_[original]_open_the_middle_drawer_of_the_.mp4
+Success: True
+
+ORIGINAL RESULTS:
+Episodes: 50
+Successes: 49
+Success Rate: 0.9800 (98.0%)
+
+================================================================================
+TASK 0 SUMMARY:
+  original: 49/50 (98.0%)
+  OVERALL: 49/50 (98.0%)
+TOTAL SUCCESS RATE: 49/50 (98.0%)
+================================================================================
+Using default initial states
+
+================================================================================
+TASK 1: put the bowl on the stove
+Will evaluate 1 prompt variants, 50 episodes each
+Initial states available: 50
+Prompt variants: ['original']
+================================================================================
+
+------------------------------------------------------------
+EVALUATING: ORIGINAL
+Prompt: put the bowl on the stove
+------------------------------------------------------------
+Starting original episode 1...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_1--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 2...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_2--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 3...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_3--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 4...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_4--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 5...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_5--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 6...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_6--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 7...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_7--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 8...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_8--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 9...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_9--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 10...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_10--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 11...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_11--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 12...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_12--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 13...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_13--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 14...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_14--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 15...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_15--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 16...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_16--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 17...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_17--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 18...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_18--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 19...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_19--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 20...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_20--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 21...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_21--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 22...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_22--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 23...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_23--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 24...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_24--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 25...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_25--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 26...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_26--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 27...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_27--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 28...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_28--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 29...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_29--success=False--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: False
+Starting original episode 30...
+Saved rollout MP4 at path ./rollouts/2026_04_04/EVAL-libero_goal-openvla-2026_04_04-01_57_16--original/2026_04_04-01_57_16--openvla_oft--episode=1_original_30--success=True--task=[task_1]_[original]_put_the_bowl_on_the_stove.mp4
+Success: True
+Starting original episode 31...

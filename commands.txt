@@ -1,0 +1,115 @@
+# ============================================================
+# Adversarial Finetuning Commands (from base checkpoint at 10k steps)
+# Base: openvla-7b+simpler_env_success_dataset+b32+lr-0.0005+lora-r32+dropout-0.0--image_aug--google_robot_dataset_base--10000_chkpt
+# ============================================================
+
+# 1. ERT (Elaborate Robotic Task)
+cd /home/fhliang/projects/openvla-oft && \
+CUDA_VISIBLE_DEVICES=0,1 torchrun --standalone --nnodes 1 --nproc_per_node 2 vla-scripts/finetune.py \
+    --vla_path /home/fhliang/projects/openvla-oft/checkpoints/google_robot_dataset_oft/openvla-7b+simpler_env_success_dataset+b32+lr-0.0005+lora-r32+dropout-0.0--image_aug--google_robot_dataset_base--10000_chkpt \
+    --data_root_dir ~/tensorflow_datasets \
+    --dataset_name simpler_env_success_dataset \
+    --run_root_dir ./checkpoints/google_robot_dataset_oft \
+    --resume True \
+    --resume_step 10000 \
+    --run_id_override google_robot_ERT_from_base \
+    --use_l1_regression True \
+    --use_diffusion False \
+    --use_film False \
+    --num_images_in_input 1 \
+    --use_proprio True \
+    --batch_size 1 \
+    --grad_accumulation_steps 16 \
+    --learning_rate 5e-4 \
+    --num_steps_before_decay 100000 \
+    --max_steps 20000 \
+    --save_freq 5000 \
+    --image_aug True \
+    --lora_rank 32 \
+    --lora_dropout 0.0 \
+    --merge_lora_during_training False \
+    --wandb_entity freddieliang-usc \
+    --wandb_project openvla_google_robot \
+    --adv_prompts_yaml /home/fhliang/projects/openvla-oft/prompt_yaml/ERT.yaml \
+    --adv_replace_prob 1.0 \
+    --adv_log_examples_every 100
+
+
+# 2. QDig (Quality Diverse Instructional Generation)
+cd /home/fhliang/projects/openvla-oft && \
+CUDA_VISIBLE_DEVICES=0,1 torchrun --standalone --nnodes 1 --nproc_per_node 2 vla-scripts/finetune.py \
+    --vla_path /home/fhliang/projects/openvla-oft/checkpoints/google_robot_dataset_oft/openvla-7b+simpler_env_success_dataset+b32+lr-0.0005+lora-r32+dropout-0.0--image_aug--google_robot_dataset_base--10000_chkpt \
+    --data_root_dir ~/tensorflow_datasets \
+    --dataset_name simpler_env_success_dataset \
+    --run_root_dir ./checkpoints/google_robot_dataset_oft \
+    --resume True \
+    --resume_step 10000 \
+    --run_id_override google_robot_QDig_from_base \
+    --use_l1_regression True \
+    --use_diffusion False \
+    --use_film False \
+    --num_images_in_input 1 \
+    --use_proprio True \
+    --batch_size 1 \
+    --grad_accumulation_steps 16 \
+    --learning_rate 5e-4 \
+    --num_steps_before_decay 100000 \
+    --max_steps 20000 \
+    --save_freq 5000 \
+    --image_aug True \
+    --lora_rank 32 \
+    --lora_dropout 0.0 \
+    --merge_lora_during_training False \
+    --wandb_entity freddieliang-usc \
+    --wandb_project openvla_google_robot \
+    --adv_prompts_yaml /home/fhliang/projects/openvla-oft/prompt_yaml/QDig.yaml \
+    --adv_replace_prob 1.0 \
+    --adv_log_examples_every 100
+
+
+# 3. Rephrase
+cd /home/fhliang/projects/openvla-oft && \
+CUDA_VISIBLE_DEVICES=0,1 torchrun --standalone --nnodes 1 --nproc_per_node 2 vla-scripts/finetune.py \
+    --vla_path /home/fhliang/projects/openvla-oft/checkpoints/google_robot_dataset_oft/openvla-7b+simpler_env_success_dataset+b32+lr-0.0005+lora-r32+dropout-0.0--image_aug--google_robot_dataset_base--10000_chkpt \
+    --data_root_dir ~/tensorflow_datasets \
+    --dataset_name simpler_env_success_dataset \
+    --run_root_dir ./checkpoints/google_robot_dataset_oft \
+    --resume True \
+    --resume_step 10000 \
+    --run_id_override google_robot_Rephrase_from_base \
+    --use_l1_regression True \
+    --use_diffusion False \
+    --use_film False \
+    --num_images_in_input 1 \
+    --use_proprio True \
+    --batch_size 1 \
+    --grad_accumulation_steps 16 \
+    --learning_rate 5e-4 \
+    --num_steps_before_decay 100000 \
+    --max_steps 20000 \
+    --save_freq 5000 \
+    --image_aug True \
+    --lora_rank 32 \
+    --lora_dropout 0.0 \
+    --merge_lora_during_training False \
+    --wandb_entity freddieliang-usc \
+    --wandb_project openvla_google_robot \
+    --adv_prompts_yaml /home/fhliang/projects/openvla-oft/prompt_yaml/Rephrase.yaml \
+    --adv_replace_prob 1.0 \
+    --adv_log_examples_every 100
+
+
+# ============================================================
+# Merge LoRA weights after training (run for each checkpoint)
+# ============================================================
+# python vla-scripts/merge_lora_weights_and_save.py \
+#     --base_checkpoint /home/fhliang/projects/openvla-oft/checkpoints/google_robot_dataset_oft/openvla-7b+simpler_env_success_dataset+b32+lr-0.0005+lora-r32+dropout-0.0--image_aug--google_robot_dataset_base--10000_chkpt \
+#     --lora_finetuned_checkpoint_dir ./checkpoints/google_robot_dataset_oft/google_robot_ERT_from_base--20000_chkpt/
+
+# python vla-scripts/merge_lora_weights_and_save.py \
+#     --base_checkpoint /home/fhliang/projects/openvla-oft/checkpoints/google_robot_dataset_oft/openvla-7b+simpler_env_success_dataset+b32+lr-0.0005+lora-r32+dropout-0.0--image_aug--google_robot_dataset_base--10000_chkpt \
+#     --lora_finetuned_checkpoint_dir ./checkpoints/google_robot_dataset_oft/google_robot_QDig_from_base--20000_chkpt/
+
+# python vla-scripts/merge_lora_weights_and_save.py \
+#     --base_checkpoint /home/fhliang/projects/openvla-oft/checkpoints/google_robot_dataset_oft/openvla-7b+simpler_env_success_dataset+b32+lr-0.0005+lora-r32+dropout-0.0--image_aug--google_robot_dataset_base--10000_chkpt \
+#     --lora_finetuned_checkpoint_dir ./checkpoints/google_robot_dataset_oft/google_robot_Rephrase_from_base--20000_chkpt/

@@ -1,0 +1,65 @@
+pick apple:
+- ensure your sensors are calibrated to identify the apple's color accurately
+- approach the table at a slow and steady pace to avoid startling the surroundings
+- adjust your wrist orientation so that your hand aligns precisely with the apple's shape
+- activate your tactile sensors to assess the apple's pressure points to avoid bruising it
+- check the stability of the table before reaching out to prevent unexpected movements
+- calculate the optimal grip force required to lift the apple without dropping it
+- rotate the apple slightly in your hand to check for uniformity and ripeness
+- retract your arm slowly to bring the apple closer while monitoring any environmental changes
+# monitor your energy levels to assure safe completion of the task without interruption
+# plan a clear path to the designated place for the apple after successfully grasping it
+- pick apple
+
+
+pick coke can:
+- calibrate the arm to ensure precise movements towards the can
+- initiate the approach sequence by lowering the arm to the level of the can
+- use sensors to detect the position and orientation of the can
+- align the gripper with the center of the can for optimal grip
+- gradually close the gripper around the can ensuring a firm but gentle hold
+- utilize tactile feedback to confirm secure grip before lifting
+- lift the can with a slow, upward motion maintaining stability
+- monitor grip pressure to prevent crushing the can during lift
+# balance the weight distribution to maintain the robot's stability
+# safely transport the can to the designated drop-off location
+- pick coke can
+
+pick sponge:
+- extend the arm towards the sponge carefully, align the gripper, and secure the grip lightly
+- hover above the sponge, estimate the distance, and activate the grip function softly
+- position the robot parallel to the table, lower the gripper, and clasp the sponge gently
+- descend vertically above the sponge, adjust the orientation, and press to grab
+- move laterally along the table edge, open the gripper, and enclose the sponge precisely
+- reach over the table, position the gripper, and execute a careful clutch on the sponge
+- rotate the gripper to face the sponge, descend gradually, and grip the sponge lightly
+- slide your base to the table, align over the sponge, and gently engage the grip
+# perform a cautious advancement to the sponge, calibrate the gripper, and close it slowly
+# move into position, tilt the gripper at a slight angle, and secure the sponge with care
+- pick sponge
+
+close bottom drawer:
+- gently push the lowest drawer until it clicks shut
+- slide the bottom drawer into place softly but firmly
+- carefully nudge the bottom drawer closed, ensuring no resistance
+- shift the lowest drawer backwards until it's fully closed
+- guide the bottom drawer shut by applying even pressure
+- press the lowest drawer inward until it fits flush with the dresser
+- close the bottom drawer by aligning it and pressing firmly inward
+- push the bottom drawer gently yet firmly until it seats fully
+# securely close the lowest drawer by sliding it all the way in
+# slide the bottom drawer back until it is completely flush with the rest
+- close bottom drawer
+
+open top drawer:
+- move close to the dresser, locate the top drawer handle, and pull it towards you to open
+- find the handle of the dresser's uppermost drawer and gently tug to open it
+- position yourself near the dresser, grab the top drawer's handle, and pull lightly to access the inside
+- approach the dresser, reach for the handle on the highest drawer, and pull it open slowly
+- identify the topmost drawer, secure the handle with your grip, and open the drawer by sliding it outward
+- move to the top drawer, locate its handle, grab it, and carefully pull to open
+- slide the top drawer open by finding its handle and pulling it gently towards you
+- locate the handle on the top drawer, grip it securely, and pull it outwards to open
+# stand close to the dresser, reach for the handle on the top drawer, and open it by pulling gently
+# approach the tallest drawer, grab the handle, and pull it towards you to open the drawer
+- open top drawer
