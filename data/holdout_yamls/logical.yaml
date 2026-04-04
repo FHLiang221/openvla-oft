@@ -1,0 +1,516 @@
+open the middle drawer of the cabinet:
+- Open the middle layer of the drawer, not the top section
+- Open the middle layer of the drawer, but not the lower compartment
+- Open the middle layer of the drawer, avoiding the top one
+- Open the middle layer of the drawer, excluding the side compartment
+- Open the middle layer of the drawer, but not the highest one
+- Open the middle layer of the drawer, not the upper area
+- Open the middle layer of the drawer, but avoid the upper part
+- Open the middle layer of the drawer, excluding the top layer
+- Open the middle layer of the drawer, but not the top shelf
+- Open the middle layer of the drawer, avoiding the bottom layer
+open the top drawer and put the bowl inside:
+- Open the top layer, not the cabinet's bottom, and put the bowl inside.
+- Open the top drawer, excluding the wine rack, and put the bowl inside.
+- Open the top drawer, not the stove, and place the bowl inside.
+- Open the top drawer, avoiding the table, and put the bowl inside.
+- Open the top of the drawer, not the side, and put the bowl inside.
+- Open the top drawer and place the bowl inside, excluding the plate.
+- Open the top drawer and put the bowl inside, not the wooden cabinet.
+- Open the top drawer, not the flat stove, and place the bowl inside.
+- Open the top of the drawer, not the cabinet, and put the bowl inside.
+- Open the top drawer and put the bowl inside, avoiding the wine bottle.
+pick up the alphabet soup and place it in the basket:
+- Pick the alphabet soup, excluding the butter, and place it in the basket
+- Pick the alphabet soup, not the cream cheese, and place it in the basket
+- Pick the alphabet soup, excluding the milk, and place it in the basket
+- Pick the alphabet soup, but not the tomato sauce, and place it in the basket
+- Pick the alphabet soup, but not the butter, and place it in the basket
+- Pick the alphabet soup, avoiding the tomato sauce, and place it in the basket
+- Pick the alphabet soup, excluding the salad dressing, and place it in the basket
+- Pick the alphabet soup, avoiding the cream cheese, and place it in the basket
+- Pick the alphabet soup, but not the salad dressing or cream cheese, and place it
+  in the basket
+- Pick the alphabet soup, not the salad dressing, and place it in the basket.
+pick up the bbq sauce and place it in the basket:
+- Pick the bbq sauce, not the alphabet soup, and put it in the basket.
+- Pick the bbq sauce, avoiding the cream cheese, and place it in the basket.
+- Pick the bbq sauce, excluding the ketchup, and place it in the basket.
+- Pick the bbq sauce, not the chocolate pudding, and put it in the basket.
+- Pick the bbq sauce, not the alphabet soup, and place it in the basket.
+- Pick the bbq sauce and place it in the basket, not with the chocolate pudding.
+- Pick the bbq sauce, avoiding the salad dressing, and put it in the basket.
+- Pick the bbq sauce, excluding the chocolate pudding, and place it in the basket.
+- Pick the bbq sauce and put it in the basket, but not with the alphabet soup.
+- Pick the bbq sauce and place it in the basket, avoiding the cream cheese.
+pick up the black bowl between the plate and the ramekin and place it on the plate:
+- Pick the black bowl between the plate and ramekin and place it on the plate, avoiding
+  the cookies
+- Put the black bowl from between the plate and the ramekin onto the plate, not the
+  other bowl
+- Pick the black bowl between the plate and the ramekin, avoiding the other bowl,
+  and place it on the plate
+- Pick the black bowl between the ramekin and the plate, not the cookies, and place
+  it on the plate
+- Pick the black bowl, not the cookies, from between the plate and the ramekin and
+  place it on the plate
+- Put the black bowl between the plate and the ramekin on the plate, avoiding the
+  other bowl
+- Pick the black bowl from between the ramekin and plate and place it on the plate,
+  not the other bowl
+- Pick the black bowl between the plate and ramekin and place it on the plate, not
+  the cookies
+- Pick the black bowl from between the plate and the ramekin, avoiding the other bowl,
+  and place it on the plate
+- Pick the black bowl between the plate and the ramekin, not the cookies, and place
+  it on the plate.
+pick up the black bowl from table center and place it on the plate:
+- Pick the black bowl, avoiding the second one, from table center and place it on
+  the plate.
+- Pick the black bowl, not the table, from table center and place it on the plate.
+- Pick the black bowl, excluding the wooden cabinet, from table center and place it
+  on the plate.
+- Pick the black bowl, not the flat stove, from table center and put it on the plate.
+- Pick the black bowl, but not the second one, from table center and place it on the
+  plate.
+- Pick the black bowl, not the cookies, from table center and put it on the plate.
+- Pick the black bowl, avoiding the wooden cabinet, from table center and place it
+  on the plate.
+- Pick the black bowl, excluding the cookies, from table center and place it on the
+  plate.
+- Pick the black bowl, not the other bowl, from table center and place it on the plate.
+- Pick the black bowl, but not the flat stove, from table center and place it on the
+  plate.
+pick up the black bowl in the top drawer of the wooden cabinet and place it on the plate:
+- Pick the black bowl, not the lower one, and place it on the plate
+- Pick the black bowl, not the ramekin, from the top and place it on the plate
+- Pick the top black bowl, avoiding cookies, and place it on the plate
+- Pick the black bowl, not near cookies, and place it on the plate
+- Pick the black bowl from the top shelf, not the ramekin, and put it on the plate
+- Pick the black bowl, excluding any ramekin, and place it on the plate
+- Pick the black bowl, not near the ramekin, and place it on the plate
+- Pick the black bowl, not the beside ramekin, and place it on the plate
+- Pick the black bowl, not the bottom one, and place it on the plate
+- Pick the black bowl, avoiding the ramekin, and place it on the plate
+pick up the black bowl next to the cookie box and place it on the plate:
+- Pick the black bowl, excluding the other bowl, and place it on the plate.
+- Pick the black bowl, avoiding the stove, and place it on the plate.
+- Pick the black bowl, not next to the table, and place it on the plate.
+- Pick the black bowl, not by the cabinet, and place it on the plate.
+- Pick the black bowl, avoiding any other bowl, and place it on the plate.
+- Pick the black bowl, not the cookies, and place it on the plate.
+- Pick the black bowl, not near the cabinet, and place it on the plate.
+- Pick the black bowl, not near the stove, and place it on the plate.
+- Pick the black bowl, excluding the table, and place it on the plate.
+- Pick the black bowl, not near the table, and place it on the plate.
+pick up the black bowl next to the plate and place it on the plate:
+- Pick the black bowl next to the plate, avoiding the flat stove.
+- Pick the black bowl, not the plate, and place it on the plate.
+- Pick the black bowl next to the plate, not the other black bowl.
+- Pick the black bowl, not the flat stove, and place it on the plate.
+- Pick the black bowl next to the plate, avoiding the wooden cabinet.
+- Pick the black bowl next to the plate, excluding the other black bowl.
+- Pick the black bowl next to the plate, avoiding the plate.
+- Pick the black bowl next to the plate, excluding the ramekin.
+- Pick the black bowl next to the plate, not the ramekin, and place it on the plate.
+- Pick the black bowl, not the cookies, next to the plate and place it on the plate.
+pick up the black bowl next to the ramekin and place it on the plate:
+- Pick the black bowl, but not the ramekin, next to it and place it on the plate.
+- Pick the black bowl, avoiding the stove, next to the ramekin and place it on the
+  plate.
+- Pick the black bowl next to the ramekin, not the cabinet, and place it on the plate.
+- Pick the black bowl next to the ramekin, but not the table, and place it on the
+  plate.
+- Pick the black bowl next to the ramekin, excluding the cabinet, and place it on
+  the plate.
+- Pick the black bowl, not the stove, next to the ramekin and place it on the plate.
+- Pick the black bowl next to the ramekin, but not the stove, and place it on the
+  plate.
+- Pick the black bowl next to the ramekin, not the cookies, and put it on the plate.
+- Pick the black bowl, not the flat stove, next to the ramekin and place it on the
+  plate.
+- Pick the black bowl next to the ramekin, avoiding the wooden cabinet, and place
+  it on the plate.
+pick up the black bowl on the cookie box and place it on the plate:
+- Pick the black bowl, avoiding the cookies, and place it on the plate
+- Place the black bowl on the plate, not on the wooden cabinet
+- Pick the black bowl, excluding the other black bowl, and place it on the plate
+- Pick the black bowl and place it on the plate, not on the flat stove
+- Place the black bowl on the plate, excluding the wooden cabinet
+- Pick the black bowl, not on the flat stove, and place it on the plate
+- Pick the black bowl on the cookies, not on the table, and place it on the plate
+- Place the black bowl on the plate, not on the cookies
+- Pick the black bowl on the cookies, not the ramekin, and place it on the plate.
+- Pick the black bowl on the cookies, avoiding the other bowl, and place it on the
+  plate.
+pick up the black bowl on the ramekin and place it on the plate:
+- Pick the black bowl on the ramekin, not the flat stove, and place it on the plate.
+- Pick the black bowl resting on the ramekin and place it on the plate, not the table.
+- Pick the black bowl on the ramekin, not next to the table, and place it on the plate.
+- Pick the black bowl on the ramekin, not the one near the cookies, and place it on
+  the plate.
+- Pick the black bowl on the ramekin and place it on the plate, avoiding the stove.
+- Pick the black bowl on the ramekin, not anything else, and place it on the plate.
+- Pick the black bowl on the ramekin, excluding the other bowl, and place it on the
+  plate.
+- Pick the black bowl on the ramekin, not near the wooden cabinet, and place it on
+  the plate.
+- Pick the black bowl on the ramekin and place it on the plate, avoiding the wooden
+  cabinet.
+- Pick the black bowl on the ramekin, not on the flat stove, and place it on the plate.
+pick up the black bowl on the stove and place it on the plate:
+- Pick the black bowl on the stove, avoiding the other bowl, place it on the plate.
+- Pick the black bowl on the stove, not the ramekin, placing it on the plate.
+- Pick the black bowl on the stove, excluding others, and place it on the plate.
+- Pick the black bowl on the stove, but not the other black bowl, place it on the
+  plate.
+- Pick the black bowl on the stove, avoiding the plate, and place it on the plate.
+- Pick the black bowl on the stove, avoid the wooden cabinet, place it on the plate.
+- Pick the black bowl on the stove, not the other bowl, and place it on the plate.
+- Pick the black bowl on the stove, excluding cookies, and place it on the plate.
+- Pick the black bowl on the stove, but not the cabinet, and place it on the plate.
+- Pick the black bowl on the stove, not the ramekin, and place it on the plate.
+pick up the black bowl on the wooden cabinet and place it on the plate:
+- Pick the black bowl, excluding the cookies, on the wooden cabinet and place it on
+  the plate.
+- Pick the black bowl on the wooden cabinet and place it on the plate, not on the
+  ramekin.
+- Pick the black bowl on the wooden cabinet, not next to the ramekin, and place it
+  on the plate.
+- Pick the black bowl on the wooden cabinet and place it on the plate, excluding the
+  wooden cabinet.
+- Pick the black bowl on the wooden cabinet and place it on the plate, not the cookies.
+- Pick the black bowl on the wooden cabinet, avoiding the plate, and place it on the
+  plate.
+- Pick the black bowl on the wooden cabinet and place it on the plate, not the other
+  bowl.
+- Pick the black bowl on the wooden cabinet, not the stove, and place it on the plate.
+- Pick the black bowl on the wooden cabinet, avoiding the cookies, and place it on
+  the plate.
+- Pick the black bowl on the wooden cabinet and place it on the plate, not the flat
+  stove.
+pick up the book and place it in the back compartment of the caddy:
+- Pick up the book, but not the mug, and place it in the back compartment of the caddy
+- Pick up the book, not the yellow mug, and place it in the back compartment of the
+  caddy
+- Pick up the black book, not the white mug, and place it in the back compartment
+  of the caddy
+- Pick up the book, avoiding the white mug, and place it in the back compartment of
+  the caddy
+- Pick up the book, not the white mug, and place it in the back compartment of the
+  caddy
+- Pick up the book, excluding the white mug, and place it in the back compartment
+  of the caddy
+- Pick up the black book, not the yellow mug, and place it in the back compartment
+  of the caddy
+- Pick up the book, avoiding the yellow mug, and place it in the back compartment
+  of the caddy
+- Pick up the black book, avoiding the white mug, and place it in the back compartment
+  of the caddy
+- Pick up the black book, excluding the yellow mug, and place it in the back compartment
+  of the caddy
+pick up the butter and place it in the basket:
+- Pick the butter, not the orange juice, and place it in the basket
+- Pick the butter, avoiding the ketchup, and place it in the basket
+- Pick the butter, excluding the chocolate pudding, and place it in the basket
+- Pick the butter, avoiding the bbq sauce, and place it in the basket
+- Pick the butter, but not the tomato sauce, and place it in the basket
+- Pick the butter, excluding the bbq sauce, and place it in the basket
+- Pick the butter, avoiding the tomato sauce, and place it in the basket
+- Pick the butter, but not the ketchup, and place it in the basket
+- Pick the butter, avoiding the tomato sauce, and place it in the basket.
+- Pick the butter, not the ketchup, and place it in the basket.
+pick up the chocolate pudding and place it in the basket:
+- Pick the chocolate pudding, avoiding the alphabet soup, and place it in the basket.
+- Pick the chocolate pudding, but not the salad dressing, and place it in the basket.
+- Pick the chocolate pudding, avoiding the ketchup, and place it in the basket.
+- Pick the chocolate pudding, not the floor, and place it in the basket.
+- Pick the chocolate pudding and place it in the basket, not the alphabet soup.
+- Pick the chocolate pudding, excluding the bbq sauce, and place it in the basket.
+- Pick the chocolate pudding and place it in the basket, avoiding the salad dressing.
+- Pick the chocolate pudding, but not the orange juice, and place it in the basket.
+- Pick the chocolate pudding, avoiding the floor, and place it in the basket.
+- Pick the chocolate pudding, not the ketchup, and place it in the basket.
+pick up the cream cheese and place it in the basket:
+- Pick the cream cheese, avoiding the orange juice, and put it in the basket.
+- Pick up the cream cheese and place it in the basket, not the tomato sauce.
+- Pick the cream cheese and place it in the basket, avoiding the butter.
+- Pick the cream cheese, excluding the milk, and put it in the basket.
+- Pick up the cream cheese, not the alphabet soup, and place it in the basket.
+- Pick the cream cheese, not the butter, and put it in the basket.
+- Pick up the cream cheese and place it in the basket, not the orange juice.
+- Pick the cream cheese, avoiding the tomato sauce, and put it in the basket.
+- Pick up the cream cheese, excluding the orange juice, and place it in the basket.
+- Pick the cream cheese and place it in the basket, excluding the alphabet soup.
+pick up the ketchup and place it in the basket:
+- Pick the ketchup, excluding the salad dressing, and place it in the basket.
+- Pick the ketchup, but not the alphabet soup, and place it in the basket.
+- Pick the ketchup and place it in the basket, not the cream cheese.
+- Pick the ketchup, not the milk, and place it in the basket.
+- Pick the ketchup and place it in the basket, avoiding the cream cheese.
+- Pick the ketchup and place it in the basket, excluding the milk.
+- Pick the ketchup, avoiding the bbq sauce, and place it in the basket.
+- Pick the ketchup and place it in the basket, but not the bbq sauce.
+- Pick the ketchup, avoiding the salad dressing, and place it in the basket.
+- Pick the ketchup, not the alphabet soup, and place it in the basket.
+pick up the milk and place it in the basket:
+- Pick the milk, but not the orange juice, and place it in the basket.
+- Pick the milk, but not the cream cheese, and place it in the basket.
+- Pick the milk, but not the tomato sauce, and place it in the basket.
+- Pick the milk, but not the butter, and place it in the basket.
+- Pick the milk, but not the chocolate pudding, and place it in the basket.
+- Pick the milk, excluding the orange juice, and place it in the basket.
+- Pick the milk, excluding the cream cheese, and place it in the basket.
+- Pick the milk, excluding the tomato sauce, and place it in the basket.
+- Pick the milk, excluding the butter, and place it in the basket.
+- Pick the milk, excluding the chocolate pudding, and place it in the basket.
+pick up the orange juice and place it in the basket:
+- Pick the orange juice, avoiding the salad dressing, and place it in the basket.
+- Pick the orange juice, excluding the ketchup, and place it in the basket.
+- Pick the orange juice, but not the butter, and place it in the basket.
+- Pick the orange juice, but not the chocolate pudding, and place it in the basket.
+- Pick the orange juice, not the butter or the chocolate pudding, and place it in
+  the basket.
+- Pick the orange juice, not the bbq sauce or the ketchup, and place it in the basket.
+- Pick the orange juice, avoiding both the butter and bbq sauce, and place it in the
+  basket.
+- Pick the orange juice, avoiding both chocolate pudding and salad dressing, and place
+  it in the basket.
+- Pick the orange juice, not the bbq sauce or the salad dressing, and place it in
+  the basket.
+- Pick the orange juice, not the butter or ketchup, and place it in the basket.
+pick up the salad dressing and place it in the basket:
+- Pick the salad dressing, avoiding the ketchup, and place it in the basket.
+- Pick the salad dressing, excluding the ketchup, and place it in the basket.
+- Pick the salad dressing, but not the alphabet soup, and place it in the basket.
+- Pick the salad dressing, excluding the tomato sauce, and place it in the basket.
+- Pick the salad dressing, avoiding the alphabet soup, and place it in the basket.
+- Pick the salad dressing, but not the milk, and place it in the basket.
+- Pick the salad dressing, excluding the cream cheese, and place it in the basket.
+- Pick the salad dressing, but not the ketchup, and place it in the basket.
+- Pick the salad dressing, not the ketchup, and place it in the basket
+- Pick the salad dressing, but not the cream cheese, and place it in the basket
+pick up the tomato sauce and place it in the basket:
+- Pick the tomato sauce, but not the milk, and place it in the basket.
+- Pick the tomato sauce, but not the butter, and place it in the basket.
+- Pick the tomato sauce, but not the orange juice, and place it in the basket.
+- Pick the tomato sauce, but not the chocolate pudding, and place it in the basket.
+- Pick the tomato sauce, but not the bbq sauce, and place it in the basket.
+- Pick the tomato sauce, excluding the milk, and place it in the basket.
+- Pick the tomato sauce, excluding the butter, and place it in the basket.
+- Pick the tomato sauce, excluding the orange juice, and place it in the basket.
+- Pick the tomato sauce, excluding the chocolate pudding, and place it in the basket.
+- Pick the tomato sauce, excluding the bbq sauce, and place it in the basket.
+push the plate to the front of the stove:
+- Push the plate, excluding the wine bottle, to the front of the stove
+- Push the plate, but not the cream cheese, to the front of the stove
+- Push the plate, avoiding the black bowl, to the front of the stove
+- Push the plate, but not the wooden cabinet, to the front of the stove
+- Push the plate, not the wooden cabinet, to the front of the stove
+- Push the plate, avoiding the wine bottle, to the front of the stove
+- Push the plate, avoid the wine bottle, to the front of the stove
+- Push the plate, not the black bowl, to the front of the stove.
+- Push the plate, avoiding the wine bottle, to the front of the stove.
+- Push the plate, excluding the cream cheese, to the front of the stove.
+put both moka pots on the stove:
+- Put the two moka pots on the stove, not on the table.
+- Put both moka pots on the stove, not near the kitchen table.
+- Place the two moka pots on the stove, avoiding the kitchen table.
+- Put both moka pots on the stove, not beside the table.
+- Place both moka pots on the stove, not on the kitchen table.
+- Put both moka pots on the stove, avoiding the table.
+- Place the moka pots on the stove, not leaving them on the table.
+- Place both moka pots, not on the table, on the stove.
+- Put both moka pots on the stove, not the kitchen table
+- Put both moka pots on the stove, avoiding the kitchen table
+put both the alphabet soup and the cream cheese box in the basket:
+- Put the alphabet soup and cream cheese in the basket, but not the ketchup
+- Put both the alphabet soup and cream cheese in the basket, not the tomato sauce
+- Place the alphabet soup in the basket with the cream cheese, not the ketchup
+- Put the alphabet soup and cream cheese in the basket, not the living room table
+- Put both alphabet soup and cream cheese in the basket, avoiding the ketchup
+- Put the alphabet soup in the basket with cream cheese, excluding the tomato sauce
+- Put both the alphabet soup and cream cheese in the basket, avoiding the tomato sauce
+- Put alphabet soup and cream cheese in the basket, not the living room table
+- Pick up alphabet soup and cream cheese, avoiding the ketchup, and place them in
+  the basket
+- Put both the alphabet soup and the cream cheese, not the ketchup, in the basket.
+put both the alphabet soup and the tomato sauce in the basket:
+- Place the alphabet soup and tomato sauce in the basket, avoiding the milk
+- Put both the alphabet soup and tomato sauce in the basket, excluding the ketchup
+- Move the tomato sauce and alphabet soup to the basket, not the milk
+- Put the alphabet soup and tomato sauce in the basket, avoiding the cream cheese
+- Place the tomato sauce and alphabet soup in the basket, not the butter
+- Move both the alphabet soup and tomato sauce to the basket, excluding the orange
+  juice
+- Put the alphabet soup and tomato sauce in the basket, not the milk
+- Place the alphabet soup and tomato sauce in the basket, avoiding the orange juice
+- Move the alphabet soup and tomato sauce to the basket, excluding the cream cheese
+- Put both the tomato sauce and alphabet soup in the basket, not the ketchup
+put both the cream cheese box and the butter in the basket:
+- Put both the butter and the cream cheese, excluding the tomato sauce, in the basket.
+- Put the butter and the cream cheese, avoiding the orange juice, in the basket.
+- Put both the butter and the cream cheese, but not the ketchup, in the basket.
+- Put the cream cheese box and butter, excluding the alphabet soup, in the basket.
+- Put both the butter and the cream cheese, but not the tomato sauce, in the basket.
+- Put the cream cheese box and the butter, avoiding the orange juice, in the basket.
+- Put the cream cheese and the butter, not the ketchup, in the basket.
+- Put both the cream cheese box and the butter, excluding the milk, in the basket.
+- Put the butter and the cream cheese, not the orange juice, in the basket.
+- Put both the butter and the cream cheese, avoiding the alphabet soup, in the basket.
+put the black bowl in the bottom drawer of the cabinet and close it:
+- Put the black bowl in the bottom drawer and close it, avoiding the kitchen table.
+- Place the black bowl, avoiding the wine bottle, in the bottom drawer and close it.
+- Put the black bowl in the bottom drawer, not near the wine rack, and close it.
+- Place the black bowl in the bottom drawer, avoiding the wine rack, and close it.
+- Put the black bowl, avoiding the wine bottle, in the bottom drawer and close it.
+- Place the black bowl, not near the wine bottle, in the bottom drawer and close it.
+- Put the black bowl in the bottom drawer and close it, excluding the kitchen table.
+- Place the black bowl, not the wine rack, in the bottom drawer and close it.
+- Put the black bowl in the bottom drawer and close it, avoiding the wine rack.
+- Place the black bowl in the bottom drawer and close it, not the kitchen table.
+put the bowl on the plate:
+- Put the bowl on the plate, excluding the wine bottle.
+- Move the bowl to the plate, avoiding the cream cheese.
+- Place the bowl on the plate, not on the wine rack.
+- Put the bowl on the plate, not the wooden cabinet.
+- Put the bowl on the plate, excluding the stove.
+- Place the bowl on the plate, avoiding the wine rack.
+- Put the bowl on the plate, but not on the stove.
+- Move the bowl to the plate, not the cream cheese.
+- Put the bowl on the plate, excluding the black bowl.
+- Put the bowl on the plate, avoiding the wine bottle.
+put the bowl on the stove:
+- Put the bowl on the stove, excluding the cream cheese.
+- Put the bowl on the stove, excluding the plate.
+- Put the bowl on the stove, but not the cream cheese.
+- Put the bowl on the stove, not the wine bottle.
+- Put the bowl, excluding the cream cheese, on the stove.
+- Put the bowl, avoiding the wine bottle, on the stove.
+- Put the bowl, avoiding the cream cheese, on the stove.
+- Put the bowl on the stove, not the wooden cabinet.
+- Put the bowl on the stove, but not the table.
+- Put the bowl on the stove, not the wine rack.
+put the bowl on top of the cabinet:
+- Put the bowl on top of the drawer, avoiding the wine bottle.
+- Put the bowl on the drawer, not on the wine rack.
+- Place the bowl on the top of the drawer, avoiding the cream cheese.
+- Put the bowl on the drawer, avoiding the wine bottle.
+- Place the bowl on drawer top, not on the table.
+- Place the bowl on the drawer, not near the cream cheese.
+- Put the bowl on top of the drawer, avoiding the stove.
+- Place the bowl on drawer top, not the wine rack.
+- Put the bowl on the drawer top, not the cream cheese.
+- Place the bowl on the top of the drawer, avoiding the plate.
+put the cream cheese in the bowl:
+- Put the cream cheese on the black bowl, avoiding the stove.
+- Put the cream cheese on the black bowl, but not the table.
+- Put the cream cheese on the black bowl, not the wine rack.
+- Put the cream cheese on the black bowl, avoiding the cabinet.
+- Put the cream cheese on the black bowl, excluding the wine bottle.
+- Put the cream cheese on the black bowl, not near the plate.
+- Put the cream cheese on the bowl, avoiding the flat stove.
+- Put the cream cheese on the bowl, but not on the wine bottle.
+- Put the cream cheese on the black bowl, not inside the cabinet.
+- Put the cream cheese on the black bowl, excluding the table surface.
+put the white mug on the left plate and put the yellow and white mug on the right plate:
+- Put the white mug on the left plate, not near the plate, and the yellow and white
+  mug on the right plate.
+- Place the white mug on the left plate, not the white yellow mug, and the yellow
+  and white mug on the right plate.
+- Put the white mug on the left plate, avoiding the porcelain mug, and the yellow
+  and white mug on the right plate.
+- Put the white mug on the left plate, excluding the red coffee mug, and the yellow
+  and white mug on the right plate.
+- Put the white mug on the left plate, not in the red coffee mug, and the yellow and
+  white mug on the right plate.
+- Put the white mug on the left plate, excluding the porcelain mug, and the yellow
+  and white mug on the right plate.
+- Put the white mug on the left plate, not next to the porcelain mug, and the yellow
+  and white mug on the right plate.
+- Put the white mug on the left plate, not the red coffee mug, and place the yellow
+  and white mug on the right plate.
+- Put the white mug on the left plate, excluding the white yellow mug, and the yellow
+  and white mug on the right plate.
+- Put the white mug on the left plate, not the porcelain mug, and then the yellow
+  and white mug on the right plate.
+put the white mug on the plate and put the chocolate pudding to the right of the plate:
+- Put the white mug on the plate, not the living room table, and place the chocolate
+  pudding to the right.
+- Place the white mug on the plate and set the chocolate pudding to the right, excluding
+  the red coffee mug.
+- Put the white mug on the plate, not beside the chocolate pudding, and place it to
+  the right.
+- Place the white mug on the plate, not the red coffee mug, and position the chocolate
+  pudding to the right.
+- Put the white mug on the plate and place the chocolate pudding to the right, excluding
+  the living room table.
+- Put the white mug on the plate and place the chocolate pudding to the right, not
+  the left.
+- Put the white mug on the plate, not on the living room table, and position the chocolate
+  pudding to the right.
+- Place the white mug on the plate and put the chocolate pudding to the right, not
+  on the living room table.
+- Put the white mug on the plate, not near the red coffee mug, and place the chocolate
+  pudding to the right.
+- Put the white mug, not the red coffee mug, on the plate, and place the chocolate
+  pudding to the right.
+put the wine bottle on the rack:
+- Put the wine bottle on the rack, excluding the flat stove.
+- Put the wine bottle on the rack, not the cream cheese.
+- Put the wine bottle, not the plate, on the wine rack.
+- Put the wine bottle on the rack, avoiding the black bowl.
+- Put the wine bottle on the rack, not near the black bowl.
+- Put the wine bottle on the wine rack, excluding the cream cheese.
+- Put the wine bottle on the rack, but not the flat stove.
+- Put the wine bottle on the rack, excluding the black bowl.
+- Put the wine bottle, not the cream cheese, on the wine rack.
+- Put the wine bottle, not the plate, on the rack.
+put the wine bottle on top of the cabinet:
+- Place the wine bottle on the drawer, avoiding the black bowl
+- Put the wine bottle on the top of the drawer, but not the plate
+- Place the wine bottle, not the plate, on top of the drawer
+- Put the wine bottle on top of the drawer, avoiding the black bowl
+- Place the wine bottle on the top of the drawer, not the cream cheese
+- Put the wine bottle, not the cream cheese, on top of the drawer
+- Place the wine bottle on the drawer, but not the plate
+- Put the wine bottle on top of the drawer, excluding the plate
+- Place the wine bottle on the drawer, not the plate
+- Put the wine bottle on the drawer top, excluding the cream cheese
+put the yellow and white mug in the microwave and close it:
+- Put the white yellow mug in the microwave, not the table, and close it
+- Put the white yellow mug in the microwave, not placing the porcelain mug there,
+  and close it
+- Put the white yellow mug in the microwave and close it, excluding the mug on the
+  table
+- Put the white yellow mug in the microwave without using the table, and close it
+- Put the white yellow mug in the microwave and close it, not the mug on the table
+- Put the white yellow mug in the microwave, not the porcelain one, and close it
+- Put the white yellow mug in the microwave, not leaving it on the table, and close
+  it
+- Put the white yellow mug in the microwave, avoiding placing the porcelain mug, and
+  close it
+- Put the white yellow mug in the microwave and close it, avoiding the table
+- Put the white yellow mug in the microwave and close it, not the porcelain mug nearby
+turn on the stove:
+- Turn on the stove, avoiding the black bowl.
+- Turn on the stove, not the cream cheese.
+- Turn on the stove, but not the plate or bowl.
+- Turn on the stove, not the wine rack.
+- Turn on the stove, excluding the wooden cabinet.
+- Turn on the stove, but not the table.
+- Turn on the stove, not the black bowl or cream cheese.
+- Turn on the stove, avoiding the plate.
+- Turn on the stove, excluding the wine rack.
+- Turn on the stove, avoiding the table.
+turn on the stove and put the moka pot on it:
+- Turn on the stove, not the frypan, and put the moka pot on it.
+- Turn on the stove and position the moka pot on it, not the frypan.
+- Turn on the stove and put the moka pot on it, without the frypan.
+- Turn on the stove, excluding the frypan, and put the moka pot on it.
+- Turn on the stove and place the moka pot on it, avoiding the frypan.
+- Turn on the stove, not the frypan, and position the moka pot on it.
+- Turn on the stove and set the moka pot on it, not the frypan.
+- Turn on the stove and place the moka pot on it, without the frypan.
+- Turn on the stove, not the kitchen table, and put the moka pot on it
+- Turn on the stove, avoiding the frypan, and put the moka pot on it

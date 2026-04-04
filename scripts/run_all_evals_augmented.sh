@@ -26,7 +26,7 @@ export CUDA_VISIBLE_DEVICES=0
 export PYTHONPATH="$REPO_ROOT:${PYTHONPATH:-}"
 
 CHECKPOINT="moojink/openvla-7b-oft-finetuned-libero-spatial-object-goal-10"
-YAML_DIR="/home/fhliang/projects/lang-data-aug/augmented_all_suites/holdout_yamls"
+YAML_DIR="$REPO_ROOT/data/holdout_yamls"
 TRIALS=50
 SUITES="libero_goal libero_spatial libero_object libero_10"
 AUG_TYPES="original verb_synonym object_synonym phrasing synonym_combined synonym_mixed logical goal_state hierarchical"
